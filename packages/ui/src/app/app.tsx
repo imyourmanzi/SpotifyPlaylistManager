@@ -5,16 +5,6 @@ export function App() {
     <>
       <h1>Hello World!</h1>
       {/* START: routes */}
-      <div role="navigation">
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/spotify">Spotify</Link>
-          </li>
-        </ul>
-      </div>
       <Routes>
         <Route
           path="/"
@@ -32,9 +22,14 @@ export function App() {
               <div className="container">
                 <div id="login">
                   <h1>This is an example of the Authorization Code flow</h1>
-                  <a href="/login" className="btn btn-primary">
+                  <button
+                    onClick={() => {
+                      fetch('/api/login');
+                    }}
+                    className="btn btn-primary"
+                  >
                     Log in with Spotify
-                  </a>
+                  </button>
                 </div>
                 <div id="loggedin">
                   <div id="user-profile"></div>

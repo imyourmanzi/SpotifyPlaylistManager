@@ -58,7 +58,7 @@ fastify.get('/verify', (request, reply) => {
   reply.status(200).send({ status: 'server is running' });
 });
 
-fastify.get('/login', (request, reply) => {
+fastify.get('/api/login', (request, reply) => {
   const state = generateRandomString(16);
   reply.setCookie(STATE_KEY, state);
 
@@ -77,7 +77,7 @@ fastify.get('/login', (request, reply) => {
   reply.redirect(authRedirect);
 });
 
-fastify.get('/callback', async (request, reply) => {
+fastify.get('/api/callback', async (request, reply) => {
   // your application requests refresh and access tokens
   // after checking the state parameter
   const query = request.query as Record<string, string>;
@@ -140,7 +140,7 @@ fastify.get('/callback', async (request, reply) => {
   }
 });
 
-fastify.get('/refresh_token', async (request, reply) => {
+fastify.get('/api/refresh_token', async (request, reply) => {
   // requesting access token from refresh token
   const { refresh_token } = request.query as Record<string, string>;
 
