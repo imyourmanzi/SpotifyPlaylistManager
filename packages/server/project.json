@@ -9,8 +9,7 @@
       "options": {
         "outputPath": "dist/packages/server",
         "main": "packages/server/src/main.ts",
-        "tsConfig": "packages/server/tsconfig.app.json",
-        "assets": ["packages/server/src/assets"]
+        "tsConfig": "packages/server/tsconfig.app.json"
       },
       "configurations": {
         "production": {
