@@ -8,10 +8,13 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "exactOptionalPropertyTypes": true
+    "exactOptionalPropertyTypes": true,
+    "paths": {
+      "@components/*": ["packages/ui/src/app/components/*"],
+      "@contexts/*": ["packages/ui/src/app/contexts/*"]
+    }
   },
   "files": [],
   "include": [],
