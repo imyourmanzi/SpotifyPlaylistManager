@@ -5,18 +5,13 @@ export const LoginLink = () => {
 
   // get the server to generate the redirect URL, but then place it in the DOM
   useEffect(() => {
-    console.log('entering app hook', { redirectUri });
-
     if (!!redirectUri) {
-      console.log('already have uri');
       return;
     }
 
-    console.log('getting redirect uri');
     fetch('/api/login').then(async (response) => {
       const { authRedirect } = await response.json();
       setRedirectUri(authRedirect);
-      console.log('uri is set');
     });
   }, []);
 

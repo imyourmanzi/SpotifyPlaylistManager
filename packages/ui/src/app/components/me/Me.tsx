@@ -10,8 +10,6 @@ export const Me = () => {
   const [playlists, setPlaylists] = useState<Record<string, string>[]>([]);
 
   useEffect(() => {
-    console.log('entered useeffect me', { accessToken });
-
     if (accessToken) {
       fetch('https://api.spotify.com/v1/me', {
         headers: {
@@ -19,10 +17,7 @@ export const Me = () => {
         },
       })
         .then((response) => response.json())
-        .then((data) => {
-          console.log({ message: 'me data', data });
-          setUserData(data);
-        });
+        .then(setUserData);
     }
   }, []);
 

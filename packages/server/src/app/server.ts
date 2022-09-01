@@ -84,7 +84,6 @@ fastify.get('/api/callback', async (request, reply) => {
   const code = query.code ?? null;
   const state = query.state ?? null;
 
-  console.log({ message: 'i have cookies', cookies: request.cookies });
   const storedState = request.cookies ? request.cookies[STATE_KEY] : null;
 
   if (state === null || state !== storedState) {

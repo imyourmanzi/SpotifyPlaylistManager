@@ -11,13 +11,11 @@ export const SpotifyLoginCallbackHandler = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('making callback request', { query: window.location.search });
     fetch(`/api/callback${window.location.search}`, { credentials: 'include' }).then(
       async (response) => {
         const { access_token, refresh_token, error } = await response.json();
 
         if (error) {
-          console.error({ message: 'callback error', error });
           return;
         }
 
@@ -28,14 +26,10 @@ export const SpotifyLoginCallbackHandler = () => {
   }, []);
 
   useEffect(() => {
-    console.log('entered useEffect', { accessToken, refreshToken });
-
     if (!accessToken || !refreshToken) {
-      console.log('not navigating yet, missing data');
       return;
     }
 
-    console.log('navigating to /me');
     navigate('/me');
   }, [accessToken, refreshToken]);
 
