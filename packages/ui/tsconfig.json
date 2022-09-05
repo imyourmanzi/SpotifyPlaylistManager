@@ -13,7 +13,8 @@
     "exactOptionalPropertyTypes": true,
     "paths": {
       "@components/*": ["packages/ui/src/app/components/*"],
-      "@contexts/*": ["packages/ui/src/app/contexts/*"]
+      "@contexts/*": ["packages/ui/src/app/contexts/*"],
+      "@hooks/*": ["packages/ui/src/app/hooks/*"]
     }
   },
   "files": [],
