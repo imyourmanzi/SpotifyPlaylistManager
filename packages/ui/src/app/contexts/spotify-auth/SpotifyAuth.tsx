@@ -26,12 +26,16 @@ const spotifyAuthReducer: Reducer<SpotifyAuthState, SpotifyAuthAction> = (
 ) => {
   switch (action.type) {
     case 'setAccessToken': {
-      localStorage.setItem('access_token', action.value);
+      action.value
+        ? localStorage.setItem('access_token', action.value)
+        : localStorage.removeItem('access_token');
       return { ...state, accessToken: action.value };
     }
 
     case 'setRefreshToken': {
-      localStorage.setItem('refresh_token', action.value);
+      action.value
+        ? localStorage.setItem('refresh_token', action.value)
+        : localStorage.removeItem('refresh_token');
       return { ...state, refreshToken: action.value };
     }
 
