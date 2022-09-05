@@ -1,0 +1,13 @@
+name: 'Check Version'
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'packages/**'
+      - 'package*.json'
+
+jobs:
+  check:
+    name: Check
+    uses: imyourmanzi/GitHubWorkflows/.github/workflows/package-json-version-check.yml@main
