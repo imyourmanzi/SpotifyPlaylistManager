@@ -1,4 +1,3 @@
-import { useStyletron } from 'baseui';
 import { Button } from 'baseui/button';
 import { toaster, ToasterContainer } from 'baseui/toast';
 import { ParagraphSmall } from 'baseui/typography';
@@ -9,8 +8,6 @@ import { useSpotifyAuth } from '@contexts/spotify-auth/SpotifyAuth';
 export const Home = () => {
   const [redirectUri, setRedirectUri] = useState('');
   const [hasError, setHasError] = useState(false);
-
-  const [css, theme] = useStyletron();
 
   const {
     state: { accessToken, refreshToken },
@@ -63,18 +60,7 @@ export const Home = () => {
   return (
     <ToasterContainer>
       <ParagraphSmall>
-        <Button
-          kind="primary"
-          className={css({
-            color: theme.colors.buttonPrimaryText,
-            marginTop: '3rem',
-            padding: '1rem',
-            textDecoration: 'none',
-            backgroundColor: theme.colors.backgroundAccent,
-            borderRadius: '1rem',
-          })}
-          onClick={onLoginInitiate}
-        >
+        <Button kind="primary" onClick={onLoginInitiate}>
           Log in with Spotify to get started
         </Button>
       </ParagraphSmall>
