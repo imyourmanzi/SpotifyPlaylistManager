@@ -7,7 +7,7 @@ import { StyledLink } from 'baseui/link';
 import { ListItem, ListItemLabel } from 'baseui/list';
 import { LabelSmall, MonoLabelSmall, ParagraphSmall } from 'baseui/typography';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSpotifyAuth } from '@contexts/spotify-auth/SpotifyAuth';
 
 export const Me = () => {
