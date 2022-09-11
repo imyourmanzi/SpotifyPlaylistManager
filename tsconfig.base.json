@@ -14,7 +14,11 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@spotify-playlist-manager/ui/components/*": ["packages/ui/src/app/components/*"],
+      "@spotify-playlist-manager/ui/contexts/*": ["packages/ui/src/app/contexts/*"],
+      "@spotify-playlist-manager/spotify-sdk": ["packages/spotify-sdk/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

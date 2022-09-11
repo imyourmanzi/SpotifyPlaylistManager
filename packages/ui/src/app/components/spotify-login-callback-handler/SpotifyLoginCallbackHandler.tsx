@@ -1,4 +1,4 @@
-import { useSpotifyAuth } from '@contexts/spotify-auth/SpotifyAuth';
+import { useSpotifyAuth } from '@spotify-playlist-manager/ui/contexts/spotify-auth/SpotifyAuth';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 

@@ -1,9 +1,9 @@
 import { StyledDivider } from 'baseui/divider';
 import { DisplayMedium } from 'baseui/typography';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import { Home } from '@components/home/Home';
-import { Me } from '@components/me/Me';
-import { SpotifyLoginCallbackHandler } from '@components/spotify-login-callback-handler/SpotifyLoginCallbackHandler';
+import { Home } from '@spotify-playlist-manager/ui/components/home/Home';
+import { Me } from '@spotify-playlist-manager/ui/components/me/Me';
+import { SpotifyLoginCallbackHandler } from '@spotify-playlist-manager/ui/components/spotify-login-callback-handler/SpotifyLoginCallbackHandler';
 import { useStyletron } from 'baseui';
 
 export function App() {

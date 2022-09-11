@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { Client as Styletron } from 'styletron-engine-atomic';
 import { Provider as StyletronProvider } from 'styletron-react';
-import { SpotifyAuthProvider } from '@contexts/spotify-auth/SpotifyAuth';
+import { SpotifyAuthProvider } from '@spotify-playlist-manager/ui/contexts/spotify-auth/SpotifyAuth';
 import App from './app/app';
 
 const engine = new Styletron();

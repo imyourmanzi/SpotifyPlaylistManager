@@ -8,7 +8,7 @@ import { ListItem, ListItemLabel } from 'baseui/list';
 import { LabelSmall, MonoLabelSmall, ParagraphSmall } from 'baseui/typography';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSpotifyAuth } from '@contexts/spotify-auth/SpotifyAuth';
+import { useSpotifyAuth } from '@spotify-playlist-manager/ui/contexts/spotify-auth/SpotifyAuth';
 import { toaster, ToasterContainer } from 'baseui/toast';
 
 /**
