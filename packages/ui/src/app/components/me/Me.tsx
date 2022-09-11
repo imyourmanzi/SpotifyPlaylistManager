@@ -4,11 +4,11 @@ import { Button } from 'baseui/button';
 import { FlexGrid, FlexGridItem } from 'baseui/flex-grid';
 import { Heading, HeadingLevel } from 'baseui/heading';
 import { StyledLink } from 'baseui/link';
+import { toaster, ToasterContainer } from 'baseui/toast';
 import { LabelSmall, MonoLabelSmall, ParagraphSmall } from 'baseui/typography';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSpotifyAuth } from '@spotify-playlist-manager/ui/contexts/spotify-auth/SpotifyAuth';
-import { toaster, ToasterContainer } from 'baseui/toast';
 
 /**
  * A property for each request type this component makes, allowing storing state to be
@@ -17,7 +17,6 @@ import { toaster, ToasterContainer } from 'baseui/toast';
 type RequestTypes = {
   me: boolean;
   newToken: boolean;
-  playlists: boolean;
 };
 
 export const Me = () => {
@@ -30,20 +29,14 @@ export const Me = () => {
   const [loadingStates, setLoadingStates] = useState<RequestTypes>({
     me: false,
     newToken: false,
-    playlists: false,
   });
 
   const [errors, setErrors] = useState<RequestTypes>({
     me: false,
     newToken: false,
-    playlists: false,
   });
 
   const [userData, setUserData] = useState<Record<string, any> | null>(null);
-  const [playlists, setPlaylists] = useState<
-    { id: string; name: string; tracks: { total: number } }[]
-  >([]);
-
   const [css, theme] = useStyletron();
 
   useEffect(
@@ -196,7 +189,6 @@ export const Me = () => {
                   >
                     Obtain new token using the refresh token
                   </Button>
-                  <Heading>More Actions</Heading>
                 </HeadingLevel>
               </>
             )}

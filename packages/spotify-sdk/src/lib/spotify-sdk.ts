@@ -96,7 +96,40 @@ export type GetPlaylist = ResponseError & {
  */
 export type GetCurrentUserPlaylists = ResponseError & {
   href: string;
-  items: {}[];
+  items: {
+    collaborative: boolean;
+    description: string | null;
+    external_urls: {
+      spotify: string;
+    };
+    href: string;
+    id: string;
+    images: {
+      url: string;
+      height: number | null;
+      width: number | null;
+    }[];
+    name: string;
+    owner: {
+      display_name: string;
+      external_urls: {
+        spotify: string;
+      };
+      href: string;
+      id: string;
+      type: 'user';
+      uri: string;
+    };
+    primary_color: null;
+    public: boolean;
+    snapshot_id: string;
+    tracks: {
+      href: string;
+      total: number;
+    };
+    type: 'playlist';
+    uri: string;
+  }[];
   limit: number;
   next: string | null;
   offset: number;

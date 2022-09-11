@@ -1,4 +1,3 @@
-import { useSpotifyAuth } from '@spotify-playlist-manager/ui/contexts/spotify-auth/SpotifyAuth';
 import { Heading, HeadingLevel } from 'baseui/heading';
 import { ListItem, ListItemLabel } from 'baseui/list';
 import { toaster, ToasterContainer } from 'baseui/toast';
@@ -7,8 +6,11 @@ import {
   SPOTIFY_WEB_API_BASE_URL,
   GetCurrentUserPlaylists,
 } from '@spotify-playlist-manager/spotify-sdk';
+import { useSpotifyAuth } from '@spotify-playlist-manager/ui/contexts/spotify-auth/SpotifyAuth';
+import { useStyletron } from 'baseui';
 
 export const Playlists = () => {
+  const [css] = useStyletron();
   const {
     state: { accessToken },
   } = useSpotifyAuth();
@@ -56,20 +58,22 @@ export const Playlists = () => {
 
   return (
     <ToasterContainer>
-      {!!playlists.length && (
-        <HeadingLevel>
-          <Heading>Playlists</Heading>
-          <ul>
-            {playlists.map((playlist) => (
-              <ListItem key={playlist.id}>
-                <ListItemLabel description={`${playlist.tracks.total} tracks`}>
-                  {playlist.name}
-                </ListItemLabel>
-              </ListItem>
-            ))}
-          </ul>
-        </HeadingLevel>
-      )}
+      <div className={css({ width: '70%', margin: 'auto 15% 5%', textAlign: 'left' })}>
+        {!!playlists.length && (
+          <HeadingLevel>
+            <Heading>Playlists</Heading>
+            <ul>
+              {playlists.map((playlist) => (
+                <ListItem key={playlist.id}>
+                  <ListItemLabel description={`${playlist.tracks.total} tracks`}>
+                    {playlist.name}
+                  </ListItemLabel>
+                </ListItem>
+              ))}
+            </ul>
+          </HeadingLevel>
+        )}
+      </div>
     </ToasterContainer>
   );
 };
