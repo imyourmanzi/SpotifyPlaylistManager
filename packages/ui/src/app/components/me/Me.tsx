@@ -4,7 +4,6 @@ import { Button } from 'baseui/button';
 import { FlexGrid, FlexGridItem } from 'baseui/flex-grid';
 import { Heading, HeadingLevel } from 'baseui/heading';
 import { StyledLink } from 'baseui/link';
-import { ListItem, ListItemLabel } from 'baseui/list';
 import { LabelSmall, MonoLabelSmall, ParagraphSmall } from 'baseui/typography';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -131,41 +130,6 @@ export const Me = () => {
       });
   };
 
-  const getPlaylists = () => {
-    if (!accessToken || !userData?.id || errors.playlists) {
-      return;
-    }
-
-    setLoadingStates({ ...loadingStates, playlists: true });
-    fetch(`https://api.spotify.com/v1/users/${userData.id}/playlists`, {
-      headers: {
-        Authorization: 'Bearer ' + accessToken,
-      },
-    })
-      .then(async (response) => {
-        const data = await response.json();
-
-        if (data.error) {
-          setErrors({ ...errors, playlists: true });
-          toaster.negative(
-            'Unable to playlists, please refresh or log out and back in again',
-            {
-              autoHideDuration: 4000,
-              onClose: () => {
-                setErrors({ ...errors, playlists: false });
-              },
-            },
-          );
-          return;
-        }
-
-        setPlaylists(data.items);
-      })
-      .finally(() => {
-        setLoadingStates({ ...loadingStates, playlists: false });
-      });
-  };
-
   return (
     <>
       <ToasterContainer>
@@ -233,33 +197,6 @@ export const Me = () => {
                     Obtain new token using the refresh token
                   </Button>
                   <Heading>More Actions</Heading>
-                  <FlexGrid flexGridColumnCount={4}>
-                    <FlexGridItem>
-                      <Button
-                        disabled={!userData?.id}
-                        isLoading={loadingStates.playlists}
-                        onClick={getPlaylists}
-                      >
-                        List some playlists
-                      </Button>
-                    </FlexGridItem>
-                  </FlexGrid>
-                  {!!playlists.length && (
-                    <HeadingLevel>
-                      <Heading>Playlists</Heading>
-                      <ul>
-                        {playlists.map((playlist) => (
-                          <ListItem key={playlist.id}>
-                            <ListItemLabel
-                              description={`${playlist.tracks.total} tracks`}
-                            >
-                              {playlist.name}
-                            </ListItemLabel>
-                          </ListItem>
-                        ))}
-                      </ul>
-                    </HeadingLevel>
-                  )}
                 </HeadingLevel>
               </>
             )}
