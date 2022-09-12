@@ -114,68 +114,66 @@ export const Me = () => {
   return (
     <>
       <ToasterContainer>
-        <div className={css({ width: '70%', margin: 'auto 15% 5%', textAlign: 'left' })}>
-          <HeadingLevel>
-            <FlexGrid flexGridColumnCount={2} alignItems={'baseline'}>
-              <FlexGridItem>
-                <Heading>Your Profile</Heading>
-              </FlexGridItem>
-              <FlexGridItem>
-                <MonoLabelSmall className={css({ textAlign: 'right' })}>
-                  {userData && !userData.error
-                    ? `logged in as ${userData.display_name}`
-                    : 'data error'}
-                  {', '}
-                  <Logout />
-                </MonoLabelSmall>
-              </FlexGridItem>
-            </FlexGrid>
-            {!loadingStates.me && !errors.me && userData && (
-              <>
-                <Avatar size="scale4800" src={userData.images['0'].url} />
-                <LabelSmall>Display Name</LabelSmall>
-                <ParagraphSmall>{userData.display_name}</ParagraphSmall>
-                <LabelSmall>ID</LabelSmall>
-                <ParagraphSmall>{userData.id}</ParagraphSmall>
-                <LabelSmall>Email</LabelSmall>
-                <ParagraphSmall>{userData.email}</ParagraphSmall>
-                <LabelSmall>Spotify URI</LabelSmall>
-                <ParagraphSmall>
-                  <StyledLink href={userData.external_urls.spotify}>
-                    {userData.external_urls.spotify}
-                  </StyledLink>
-                </ParagraphSmall>
-                <LabelSmall>API Link</LabelSmall>
-                <ParagraphSmall>
-                  <StyledLink href={userData.href}>{userData.href}</StyledLink>
-                </ParagraphSmall>
-                <LabelSmall>Profile Image</LabelSmall>
-                <ParagraphSmall>
-                  <StyledLink href={userData.images['0'].url}>
-                    {userData.images['0'].url}
-                  </StyledLink>
-                </ParagraphSmall>
-                <LabelSmall>Country</LabelSmall>
-                <ParagraphSmall>{userData.country}</ParagraphSmall>
-                <HeadingLevel>
-                  <Heading>OAuth Details</Heading>
-                  <LabelSmall>Access token</LabelSmall>
-                  <ParagraphSmall>{accessToken}</ParagraphSmall>
-                  <LabelSmall>Refresh token</LabelSmall>
-                  <ParagraphSmall>{refreshToken}</ParagraphSmall>
-                  <Button
-                    size="mini"
-                    disabled={!refreshToken}
-                    isLoading={loadingStates.newToken}
-                    onClick={fetchNewToken}
-                  >
-                    Obtain new token using the refresh token
-                  </Button>
-                </HeadingLevel>
-              </>
-            )}
-          </HeadingLevel>
-        </div>
+        <HeadingLevel>
+          <FlexGrid flexGridColumnCount={2} alignItems={'baseline'}>
+            <FlexGridItem>
+              <Heading>Your Profile</Heading>
+            </FlexGridItem>
+            <FlexGridItem>
+              <MonoLabelSmall className={css({ textAlign: 'right' })}>
+                {userData && !userData.error
+                  ? `logged in as ${userData.display_name}`
+                  : 'data error'}
+                {', '}
+                <Logout />
+              </MonoLabelSmall>
+            </FlexGridItem>
+          </FlexGrid>
+          {!loadingStates.me && !errors.me && userData && (
+            <>
+              <Avatar size="scale4800" src={userData.images['0'].url} />
+              <LabelSmall>Display Name</LabelSmall>
+              <ParagraphSmall>{userData.display_name}</ParagraphSmall>
+              <LabelSmall>ID</LabelSmall>
+              <ParagraphSmall>{userData.id}</ParagraphSmall>
+              <LabelSmall>Email</LabelSmall>
+              <ParagraphSmall>{userData.email}</ParagraphSmall>
+              <LabelSmall>Spotify URI</LabelSmall>
+              <ParagraphSmall>
+                <StyledLink href={userData.external_urls.spotify}>
+                  {userData.external_urls.spotify}
+                </StyledLink>
+              </ParagraphSmall>
+              <LabelSmall>API Link</LabelSmall>
+              <ParagraphSmall>
+                <StyledLink href={userData.href}>{userData.href}</StyledLink>
+              </ParagraphSmall>
+              <LabelSmall>Profile Image</LabelSmall>
+              <ParagraphSmall>
+                <StyledLink href={userData.images['0'].url}>
+                  {userData.images['0'].url}
+                </StyledLink>
+              </ParagraphSmall>
+              <LabelSmall>Country</LabelSmall>
+              <ParagraphSmall>{userData.country}</ParagraphSmall>
+              <HeadingLevel>
+                <Heading>OAuth Details</Heading>
+                <LabelSmall>Access token</LabelSmall>
+                <ParagraphSmall>{accessToken}</ParagraphSmall>
+                <LabelSmall>Refresh token</LabelSmall>
+                <ParagraphSmall>{refreshToken}</ParagraphSmall>
+                <Button
+                  size="mini"
+                  disabled={!refreshToken}
+                  isLoading={loadingStates.newToken}
+                  onClick={fetchNewToken}
+                >
+                  Obtain new token using the refresh token
+                </Button>
+              </HeadingLevel>
+            </>
+          )}
+        </HeadingLevel>
       </ToasterContainer>
     </>
   );

@@ -126,106 +126,106 @@ export const Playlists = () => {
 
   return (
     <ToasterContainer>
-      <div className={css({ width: '70%', margin: 'auto 15% 5%', textAlign: 'left' })}>
-        <HeadingLevel>
-          <Heading>Playlists</Heading>
-          <ParagraphSmall>
-            {TABLE_ROWS} playlists are shown per page. You can only work on page at a
-            time.
-          </ParagraphSmall>
-          <TableBuilder
-            data={playlists?.items ?? []}
-            isLoading={requestLoading}
-            loadingMessage={
-              <div
-                className={css({
-                  width: '100%',
-                  height: theme.sizing.scale900,
-                  color: 'transparent',
-                  backgroundImage:
-                    'linear-gradient(100deg, #eceff1 30%, #f6f7f8 50%, #eceff1 70%)',
-                  backgroundSize: '400%',
-                  animationDuration: theme.animation.timing1000,
-                  animationTimingFunction: theme.animation.easeInOutCurve,
-                  animationIterationCount: 'infinite',
-                  animationName: {
-                    '0%': {
-                      backgroundPosition: '100% 50%',
-                    },
-                    '100%': {
-                      backgroundPosition: '0 50%',
-                    },
+      <HeadingLevel>
+        <Heading>Playlists</Heading>
+        <ParagraphSmall>
+          {TABLE_ROWS} playlists are shown per page. You can only work on page at a time.
+        </ParagraphSmall>
+        <TableBuilder
+          data={playlists?.items ?? []}
+          isLoading={requestLoading}
+          loadingMessage={
+            <div
+              className={css({
+                width: '100%',
+                height: theme.sizing.scale900,
+                color: 'transparent',
+                backgroundImage:
+                  'linear-gradient(100deg, #eceff1 30%, #f6f7f8 50%, #eceff1 70%)',
+                backgroundSize: '400%',
+                animationDuration: theme.animation.timing1000,
+                animationTimingFunction: theme.animation.easeInOutCurve,
+                animationIterationCount: 'infinite',
+                animationName: {
+                  '0%': {
+                    backgroundPosition: '100% 50%',
                   },
-                })}
-              ></div>
+                  '100%': {
+                    backgroundPosition: '0 50%',
+                  },
+                },
+              })}
+            ></div>
+          }
+        >
+          <TableBuilderColumn
+            overrides={{
+              TableHeadCell: { style: { width: '1%' } },
+              TableBodyCell: { style: { width: '1%' } },
+            }}
+            header={
+              <Checkbox
+                checked={allChecked}
+                isIndeterminate={!allChecked && someChecked}
+                onChange={toggleAll}
+              />
             }
           >
-            <TableBuilderColumn
-              overrides={{
-                TableHeadCell: { style: { width: '1%' } },
-                TableBodyCell: { style: { width: '1%' } },
-              }}
-              header={
-                <Checkbox
-                  checked={allChecked}
-                  isIndeterminate={!allChecked && someChecked}
-                  onChange={toggleAll}
-                />
-              }
-            >
-              {(row: TableRow) => (
-                <Checkbox name={row.id} checked={row.selected} onChange={toggle} />
-              )}
-            </TableBuilderColumn>
-            <TableBuilderColumn header="Name">
-              {(row: TableRow) => row.name}
-            </TableBuilderColumn>
-            <TableBuilderColumn header="Creator">
-              {(row: TableRow) => row.owner.display_name}
-            </TableBuilderColumn>
-            <TableBuilderColumn header="Track Count" numeric={true}>
-              {(row: TableRow) => row.tracks.total}
-            </TableBuilderColumn>
-            <TableBuilderColumn
-              header="Link"
-              sortable={false}
-              overrides={{
-                TableHeadCell: {
-                  style: {
-                    textAlign: 'center',
-                  },
+            {(row: TableRow) => (
+              <Checkbox name={row.id} checked={row.selected} onChange={toggle} />
+            )}
+          </TableBuilderColumn>
+          <TableBuilderColumn header="Name">
+            {(row: TableRow) => row.name}
+          </TableBuilderColumn>
+          <TableBuilderColumn header="Creator">
+            {(row: TableRow) => row.owner.display_name}
+          </TableBuilderColumn>
+          <TableBuilderColumn header="Track Count" numeric={true}>
+            {(row: TableRow) => row.tracks.total}
+          </TableBuilderColumn>
+          <TableBuilderColumn
+            header="Link"
+            sortable={false}
+            overrides={{
+              TableHeadCell: {
+                style: {
+                  textAlign: 'center',
                 },
-                TableBodyCell: {
-                  style: {
-                    padding: '0',
-                    textAlign: 'center',
-                    verticalAlign: 'middle',
-                  },
+              },
+              TableBodyCell: {
+                style: {
+                  paddingTop: '0',
+                  paddingBottom: '0',
+                  paddingLeft: '0',
+                  paddingRight: '0',
+                  textAlign: 'center',
+                  verticalAlign: 'middle',
                 },
-              }}
-            >
-              {(row: TableRow) => (
-                <StyledLink
-                  className={css({
-                    fontSize: `${theme.typography.ParagraphLarge.fontSize} !important`,
-                  })}
-                  href={row.external_urls.spotify}
-                  target="_blank"
-                >
-                  <FontAwesomeIcon icon={solid('arrow-up-right-from-square')} />
-                </StyledLink>
-              )}
-            </TableBuilderColumn>
-          </TableBuilder>
-          <Pagination
-            currentPage={page}
-            numPages={playlists ? Math.ceil(playlists.total / TABLE_ROWS) : 1}
-            onNextClick={() => setPage(page + 1)}
-            onPrevClick={() => setPage(page - 1)}
-            onPageChange={({ nextPage }) => setPage(nextPage)}
-          />
-        </HeadingLevel>
-      </div>
+              },
+            }}
+          >
+            {(row: TableRow) => (
+              <StyledLink
+                className={css({
+                  fontSize: `${theme.typography.ParagraphLarge.fontSize} !important`,
+                })}
+                href={row.external_urls.spotify}
+                target="_blank"
+              >
+                <FontAwesomeIcon icon={solid('arrow-up-right-from-square')} />
+              </StyledLink>
+            )}
+          </TableBuilderColumn>
+        </TableBuilder>
+        <Pagination
+          currentPage={page}
+          numPages={playlists ? Math.ceil(playlists.total / TABLE_ROWS) : 1}
+          onNextClick={() => setPage(page + 1)}
+          onPrevClick={() => setPage(page - 1)}
+          onPageChange={({ nextPage }) => setPage(nextPage)}
+        />
+      </HeadingLevel>
     </ToasterContainer>
   );
 };
