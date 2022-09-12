@@ -21,7 +21,7 @@ type Playlists = Omit<GetCurrentUserPlaylists, 'items'> & {
 };
 type TableRow = Playlists['items'][number];
 
-const TABLE_ROWS = 8;
+const TABLE_ROWS = 50;
 
 export const Playlists = () => {
   const [css, theme] = useStyletron();
