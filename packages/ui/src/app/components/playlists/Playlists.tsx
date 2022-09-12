@@ -1,6 +1,9 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
 import { useStyletron } from 'baseui';
 import { Checkbox } from 'baseui/checkbox';
 import { Heading, HeadingLevel } from 'baseui/heading';
+import { StyledLink } from 'baseui/link';
 import { Pagination } from 'baseui/pagination';
 import { TableBuilder, TableBuilderColumn } from 'baseui/table-semantic';
 import { toaster, ToasterContainer } from 'baseui/toast';
@@ -177,8 +180,41 @@ export const Playlists = () => {
             <TableBuilderColumn header="Name">
               {(row: TableRow) => row.name}
             </TableBuilderColumn>
+            <TableBuilderColumn header="Creator">
+              {(row: TableRow) => row.owner.display_name}
+            </TableBuilderColumn>
             <TableBuilderColumn header="Track Count" numeric={true}>
               {(row: TableRow) => row.tracks.total}
+            </TableBuilderColumn>
+            <TableBuilderColumn
+              header="Link"
+              sortable={false}
+              overrides={{
+                TableHeadCell: {
+                  style: {
+                    textAlign: 'center',
+                  },
+                },
+                TableBodyCell: {
+                  style: {
+                    padding: '0',
+                    textAlign: 'center',
+                    verticalAlign: 'middle',
+                  },
+                },
+              }}
+            >
+              {(row: TableRow) => (
+                <StyledLink
+                  className={css({
+                    fontSize: `${theme.typography.ParagraphLarge.fontSize} !important`,
+                  })}
+                  href={row.external_urls.spotify}
+                  target="_blank"
+                >
+                  <FontAwesomeIcon icon={solid('arrow-up-right-from-square')} />
+                </StyledLink>
+              )}
             </TableBuilderColumn>
           </TableBuilder>
           <Pagination
