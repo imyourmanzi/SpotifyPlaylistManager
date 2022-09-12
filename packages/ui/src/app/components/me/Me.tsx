@@ -7,7 +7,7 @@ import { StyledLink } from 'baseui/link';
 import { toaster, ToasterContainer } from 'baseui/toast';
 import { LabelSmall, MonoLabelSmall, ParagraphSmall } from 'baseui/typography';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Logout } from '@spotify-playlist-manager/ui/components/logout/Logout';
 import { useSpotifyAuth } from '@spotify-playlist-manager/ui/contexts/spotify-auth/SpotifyAuth';
 
 /**
@@ -23,7 +23,6 @@ export const Me = () => {
   const {
     state: { accessToken, refreshToken },
     setAccessToken,
-    setRefreshToken,
   } = useSpotifyAuth();
 
   const [loadingStates, setLoadingStates] = useState<RequestTypes>({
@@ -77,17 +76,6 @@ export const Me = () => {
     [accessToken], // purposefully leaving out `errors` so we don't constantly retry when the toast closes
   );
 
-  const navigate = useNavigate();
-
-  const logout: React.MouseEventHandler<HTMLAnchorElement> = (event) => {
-    event.preventDefault();
-
-    setAccessToken('');
-    setRefreshToken('');
-
-    navigate(new URL(event.currentTarget.href).pathname);
-  };
-
   const fetchNewToken = () => {
     if (!refreshToken || errors.newToken) {
       return;
@@ -137,14 +125,7 @@ export const Me = () => {
                   {userData?.error
                     ? `logged in as ${userData.display_name}`
                     : 'data error'}{' '}
-                  /{' '}
-                  <StyledLink
-                    className={css({ ...theme.typography.MonoLabelSmall })}
-                    href="/"
-                    onClick={logout}
-                  >
-                    logout
-                  </StyledLink>
+                  <Logout />
                 </MonoLabelSmall>
               </FlexGridItem>
             </FlexGrid>
