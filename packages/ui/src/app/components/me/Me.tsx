@@ -122,9 +122,10 @@ export const Me = () => {
               </FlexGridItem>
               <FlexGridItem>
                 <MonoLabelSmall className={css({ textAlign: 'right' })}>
-                  {userData?.error
+                  {userData && !userData.error
                     ? `logged in as ${userData.display_name}`
-                    : 'data error'}{' '}
+                    : 'data error'}
+                  {', '}
                   <Logout />
                 </MonoLabelSmall>
               </FlexGridItem>
