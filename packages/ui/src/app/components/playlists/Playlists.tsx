@@ -21,7 +21,7 @@ type TableRow = Playlists['items'][number];
 const TABLE_ROWS = 8;
 
 export const Playlists = () => {
-  const [css] = useStyletron();
+  const [css, theme] = useStyletron();
   const {
     state: { accessToken },
   } = useSpotifyAuth();
@@ -132,20 +132,29 @@ export const Playlists = () => {
           </ParagraphSmall>
           <TableBuilder
             data={playlists?.items ?? []}
-            isLoading={true}
+            isLoading={requestLoading}
             loadingMessage={
-              <>
-                {Array(TABLE_ROWS).fill(
-                  <p
-                    className={css({
-                      backgroundColor: 'rgba(220,220,220,0.5)',
-                      width: '100%',
-                      height: '24px',
-                      padding: '16px auto',
-                    })}
-                  ></p>,
-                )}
-              </>
+              <div
+                className={css({
+                  width: '100%',
+                  height: theme.sizing.scale900,
+                  color: 'transparent',
+                  backgroundImage:
+                    'linear-gradient(100deg, #eceff1 30%, #f6f7f8 50%, #eceff1 70%)',
+                  backgroundSize: '400%',
+                  animationDuration: theme.animation.timing1000,
+                  animationTimingFunction: theme.animation.easeInOutCurve,
+                  animationIterationCount: 'infinite',
+                  animationName: {
+                    '0%': {
+                      backgroundPosition: '100% 50%',
+                    },
+                    '100%': {
+                      backgroundPosition: '0 50%',
+                    },
+                  },
+                })}
+              ></div>
             }
           >
             <TableBuilderColumn
