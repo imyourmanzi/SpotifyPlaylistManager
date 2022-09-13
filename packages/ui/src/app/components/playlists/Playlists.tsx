@@ -124,6 +124,16 @@ export const Playlists = () => {
     getUserPlaylists();
   }, [accessToken, page]);
 
+  const Paganitaor = () => (
+    <Pagination
+      currentPage={page}
+      numPages={playlists ? Math.ceil(playlists.total / TABLE_ROWS) : 1}
+      onNextClick={() => setPage(page + 1)}
+      onPrevClick={() => setPage(page - 1)}
+      onPageChange={({ nextPage }) => setPage(nextPage)}
+    />
+  );
+
   return (
     <ToasterContainer>
       <HeadingLevel>
@@ -131,6 +141,7 @@ export const Playlists = () => {
         <ParagraphSmall>
           {TABLE_ROWS} playlists are shown per page. You can only work on page at a time.
         </ParagraphSmall>
+        <Paganitaor />
         <TableBuilder
           data={playlists?.items ?? []}
           isLoading={requestLoading}
@@ -218,13 +229,7 @@ export const Playlists = () => {
             )}
           </TableBuilderColumn>
         </TableBuilder>
-        <Pagination
-          currentPage={page}
-          numPages={playlists ? Math.ceil(playlists.total / TABLE_ROWS) : 1}
-          onNextClick={() => setPage(page + 1)}
-          onPrevClick={() => setPage(page - 1)}
-          onPageChange={({ nextPage }) => setPage(nextPage)}
-        />
+        <Paganitaor />
       </HeadingLevel>
     </ToasterContainer>
   );
