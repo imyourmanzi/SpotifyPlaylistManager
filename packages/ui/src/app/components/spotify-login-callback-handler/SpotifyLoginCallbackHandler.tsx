@@ -1,6 +1,6 @@
-import { useSpotifyAuth } from '@contexts/spotify-auth/SpotifyAuth';
+import { useSpotifyAuth } from '@spotify-playlist-manager/ui/contexts/spotify-auth/SpotifyAuth';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 /**
  * A transient component that handles the result of Spotify's authentication handler
@@ -14,10 +14,11 @@ export const SpotifyLoginCallbackHandler = () => {
     setAccessToken,
     setRefreshToken,
   } = useSpotifyAuth();
+  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`/api/callback${window.location.search}`, { credentials: 'include' }).then(
+    fetch(`/api/callback${location.search}`, { credentials: 'include' }).then(
       async (response) => {
         const { access_token, refresh_token, error } = await response.json();
 

@@ -23,10 +23,10 @@ const API_TOKEN_URI = 'https://accounts.spotify.com/api/token';
 const CLIENT_ID = 'b80440eadf0a4f989bba93e5b4ff2fc5'; // Your client id
 const REDIRECT_URI = 'http://localhost:4200/callback/'; // Your redirect uri
 const STATE_KEY = 'spotify_auth_state';
-const { CLIENT_SECRET } = process.env;
+const { SPOTIFY_SECRET } = process.env;
 
-if (!CLIENT_SECRET) {
-  console.error('Missing client secret!');
+if (!SPOTIFY_SECRET) {
+  console.error('Missing Spotify client secret!');
   process.exit(1);
 }
 
@@ -63,7 +63,7 @@ fastify.get('/api/login', (request, reply) => {
   reply.setCookie(STATE_KEY, state);
 
   // your application requests authorization
-  const scope = 'user-read-private user-read-email';
+  const scope = 'user-read-private user-read-email playlist-read-private';
   const authRedirect =
     'https://accounts.spotify.com/authorize?' +
     qs.stringify({
@@ -103,7 +103,7 @@ fastify.get('/api/callback', async (request, reply) => {
     method: 'POST',
     body: apiTokenRequestData.toString(),
     headers: {
-      authorization: `Basic ${Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString(
+      authorization: `Basic ${Buffer.from(`${CLIENT_ID}:${SPOTIFY_SECRET}`).toString(
         'base64',
       )}`,
       'content-type': 'application/x-www-form-urlencoded',
@@ -141,7 +141,7 @@ fastify.get('/api/refresh_token', async (request, reply) => {
   const requestOptions: Parameters<typeof makeRequest>['1'] = {
     method: 'POST',
     headers: {
-      authorization: `Basic ${Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString(
+      authorization: `Basic ${Buffer.from(`${CLIENT_ID}:${SPOTIFY_SECRET}`).toString(
         'base64',
       )}`,
       'content-type': 'application/x-www-form-urlencoded',
