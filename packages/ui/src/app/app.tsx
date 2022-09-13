@@ -1,8 +1,10 @@
-import { useStyletron } from 'baseui';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
+import { useStyletron, withStyle } from 'baseui';
 import { StyledDivider } from 'baseui/divider';
 import { Grid, Cell } from 'baseui/layout-grid';
 import { Navigation, NavigationProps } from 'baseui/side-navigation';
-import { DisplayMedium } from 'baseui/typography';
+import { DisplayMedium, ParagraphSmall } from 'baseui/typography';
 import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { Home } from '@spotify-playlist-manager/ui/components/home/Home';
@@ -10,8 +12,11 @@ import { Me } from '@spotify-playlist-manager/ui/components/me/Me';
 import { Playlists } from '@spotify-playlist-manager/ui/components/playlists/Playlists';
 import { SpotifyLoginCallbackHandler } from '@spotify-playlist-manager/ui/components/spotify-login-callback-handler/SpotifyLoginCallbackHandler';
 import { useSpotifyAuth } from '@spotify-playlist-manager/ui/contexts/spotify-auth/SpotifyAuth';
+import { StyledLink } from 'baseui/link';
 
 const DEFAULT_PAGE = '/';
+
+const AppDivider = withStyle(StyledDivider, { margin: '2rem 5rem' });
 
 export function App() {
   const [css] = useStyletron();
@@ -64,7 +69,7 @@ export function App() {
           Spotify Playlist Manager
         </DisplayMedium>
       </div>
-      <StyledDivider className={css({ margin: '2rem auto' })} />
+      <AppDivider />
       <Grid gridColumns={20}>
         <Cell span={3}>
           <Navigation
@@ -88,6 +93,18 @@ export function App() {
           </Routes>
         </Cell>
       </Grid>
+      <AppDivider />
+      <div className={css({ textAlign: 'center' })}>
+        <ParagraphSmall>
+          Made with <FontAwesomeIcon icon={solid('heart')} /> by{' '}
+          <StyledLink
+            href="https://github.com/imyourmanzi/SpotifyPlaylistManager"
+            target="_blank"
+          >
+            imyourmanzi
+          </StyledLink>
+        </ParagraphSmall>
+      </div>
     </>
   );
 }
