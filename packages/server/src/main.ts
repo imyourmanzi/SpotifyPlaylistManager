@@ -1,4 +1,4 @@
-import { server } from './app/server';
+import { server } from './server';
 
 server.listen({ port: 8888 }, (error) => {
   if (error) {

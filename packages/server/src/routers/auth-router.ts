@@ -17,9 +17,10 @@ const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID ?? 'b80440eadf0a4f989bba93e5b4ff
 const API_TOKEN_URI = `${SPOTIFY_ACCOUNTS_BASE_URL}/api/token`;
 const STATE_KEY = 'spotify_auth_state';
 
+export const prefix = '/auth';
 export const router: FastifyPluginAsync = async (fastify) => {
   // request authorization
-  fastify.get('/login', (request, reply) => {
+  fastify.get('/login', (_, reply) => {
     const state = generateRandomString(16);
     reply.setCookie(STATE_KEY, state);
 
@@ -60,6 +61,7 @@ export const router: FastifyPluginAsync = async (fastify) => {
       code: code,
       redirect_uri: env.redirectURI,
     } as PostAPITokenBody);
+
     const apiTokenRequestOptions: MakeRequestOptions = {
       method: 'POST',
       body: apiTokenRequestData.toString(),
@@ -99,6 +101,7 @@ export const router: FastifyPluginAsync = async (fastify) => {
       grant_type: 'refresh_token',
       refresh_token: refresh_token,
     } as PostAPITokenBody);
+
     const requestOptions: MakeRequestOptions = {
       method: 'POST',
       headers: {
