@@ -18,7 +18,7 @@ export const SpotifyLoginCallbackHandler = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`/api/callback${location.search}`, { credentials: 'include' }).then(
+    fetch(`/api/auth/callback${location.search}`, { credentials: 'include' }).then(
       async (response) => {
         const { access_token, refresh_token, error } = await response.json();
 

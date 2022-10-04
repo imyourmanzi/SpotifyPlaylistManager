@@ -39,7 +39,7 @@ export const Home = () => {
     }
 
     setHasError(false);
-    fetch('/api/login')
+    fetch('/api/auth/login')
       .then(async (response) => {
         const { authRedirect } = await response.json();
         setRedirectUri(authRedirect);

@@ -3,7 +3,7 @@ import type {
   TypeBoxTypeProvider,
 } from '@fastify/type-provider-typebox';
 import { Static, Type } from '@sinclair/typebox';
-import { JSONContentType } from '../schemas/content-type-schemas';
+import { JSONContentType } from '../shared/schemas/content-type-schemas';
 
 const PostPlaylistsExportBody = Type.Array(
   Type.Object({}, { additionalProperties: true }),
@@ -11,7 +11,16 @@ const PostPlaylistsExportBody = Type.Array(
 
 type PostPlaylistsExportBodyType = Static<typeof PostPlaylistsExportBody>;
 
+/**
+ * The server path prefix intended to be used with the router.
+ */
 export const prefix = '/playlists';
+
+/**
+ * A router plugin encapsulating all routes design for authentication and authorization to
+ *  a Spotify account.
+ * @param fastify the Fastify server the router is attached to
+ */
 export const router: FastifyPluginAsyncTypebox = async (fastify) => {
   fastify.withTypeProvider<TypeBoxTypeProvider>();
 
