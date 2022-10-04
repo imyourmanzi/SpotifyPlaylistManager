@@ -83,7 +83,7 @@ export const Me = () => {
 
     setLoadingStates({ ...loadingStates, newToken: true });
     fetch(
-      `/api/refresh_token?${new URLSearchParams({
+      `/api/auth/refresh_token?${new URLSearchParams({
         refresh_token: refreshToken,
       }).toString()}`,
     )

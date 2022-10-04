@@ -1,11 +1,7 @@
+import { ResponseError } from './response-error';
+
 export const SPOTIFY_WEB_API_VERSION = '1.0.0';
 export const SPOTIFY_WEB_API_BASE_URL = 'https://api.spotify.com/v1';
-
-/* API Responses */
-
-type ResponseError = {
-  error?: unknown;
-};
 
 /**
  * Response for `GET /me`
