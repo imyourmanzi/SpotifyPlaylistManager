@@ -8,7 +8,7 @@ import {
   router as playlistsRouter,
   prefix as playlistsPrefix,
 } from './routers/playlists-router';
-import { JSONContent } from './shared/schemas/content-type-schemas';
+import { HeadersContentTypeJson } from './shared/schemas/content-type-schemas';
 
 // set up server
 const fastify = Fastify({
@@ -16,7 +16,7 @@ const fastify = Fastify({
   querystringParser: (str) => qs.parse(str),
 }).withTypeProvider<TypeBoxTypeProvider>();
 
-fastify.addSchema(JSONContent);
+fastify.addSchema(HeadersContentTypeJson);
 
 fastify.register(FastifyCors);
 fastify.register(FastifyCookie);

@@ -3,7 +3,7 @@ import type {
   TypeBoxTypeProvider,
 } from '@fastify/type-provider-typebox';
 import { Static, Type } from '@sinclair/typebox';
-import { JSONContentType } from '../shared/schemas/content-type-schemas';
+import { HeadersContentTypeJsonType } from '../shared/schemas/content-type-schemas';
 
 const PostPlaylistsExportBody = Type.Array(
   Type.Object({}, { additionalProperties: true }),
@@ -23,7 +23,7 @@ export const prefix = '/playlists';
  */
 export const router: FastifyPluginAsyncTypebox = async (fastify) => {
   fastify.post<{
-    Headers: JSONContentType;
+    Headers: HeadersContentTypeJsonType;
     Body: PostPlaylistsExportBodyType;
   }>(
     '/export',
