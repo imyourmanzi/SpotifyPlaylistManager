@@ -4,7 +4,7 @@ export const JSONContent = Type.Object(
   {
     'Content-Type': Type.Literal('application/json'),
   },
-  { $id: 'json.contentType' },
+  { $id: 'headers.contentType:json' },
 );
 
 export type JSONContentType = Static<typeof JSONContent>;

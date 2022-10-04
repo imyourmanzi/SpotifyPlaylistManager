@@ -22,8 +22,6 @@ export const prefix = '/playlists';
  * @param fastify the Fastify server the router is attached to
  */
 export const router: FastifyPluginAsyncTypebox = async (fastify) => {
-  fastify.withTypeProvider<TypeBoxTypeProvider>();
-
   fastify.post<{
     Headers: JSONContentType;
     Body: PostPlaylistsExportBodyType;
@@ -31,7 +29,7 @@ export const router: FastifyPluginAsyncTypebox = async (fastify) => {
     '/export',
     {
       schema: {
-        headers: fastify.getSchema('json.contentType'),
+        headers: fastify.getSchema('headers.contentType:json'),
         body: PostPlaylistsExportBody,
       },
     },
