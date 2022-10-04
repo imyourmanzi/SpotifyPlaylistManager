@@ -1,5 +1,4 @@
 import Fastify from 'fastify';
-import FastifyCors from '@fastify/cors';
 import FastifyCookie from '@fastify/cookie';
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import * as qs from 'qs';
@@ -18,7 +17,6 @@ const fastify = Fastify({
 
 fastify.addSchema(HeadersContentTypeJson);
 
-fastify.register(FastifyCors);
 fastify.register(FastifyCookie);
 
 fastify.get('/healthcheck', (_, reply) => reply.status(200).send());
