@@ -21,13 +21,15 @@ import { ParagraphSmall } from 'baseui/typography';
 import { useEffect, useState } from 'react';
 import {
   SPOTIFY_WEB_API_BASE_URL,
-  GetCurrentUserPlaylists,
+  GetCurrentUserPlaylistsResponseType,
 } from '@spotify-playlist-manager/spotify-sdk';
 import { Logout } from '@spotify-playlist-manager/ui/components/logout/Logout';
 import { useSpotifyAuth } from '@spotify-playlist-manager/ui/contexts/spotify-auth/SpotifyAuth';
 
-type Playlists = Omit<GetCurrentUserPlaylists, 'items'> & {
-  items: (GetCurrentUserPlaylists['items'][number] & { selected?: boolean })[];
+type Playlists = Omit<GetCurrentUserPlaylistsResponseType, 'items'> & {
+  items: (GetCurrentUserPlaylistsResponseType['items'][number] & {
+    selected?: boolean;
+  })[];
 };
 type TableRow = Playlists['items'][number];
 
@@ -112,7 +114,8 @@ export const Playlists = () => {
           },
         },
       );
-      const playlistsData = (await playlistsResponse.json()) as GetCurrentUserPlaylists;
+      const playlistsData =
+        (await playlistsResponse.json()) as GetCurrentUserPlaylistsResponseType;
 
       if (playlistsData.error) {
         setRequestError(true);
@@ -142,13 +145,20 @@ export const Playlists = () => {
       return;
     }
 
+    const exportRequestBody = {
+      token: accessToken,
+      playlists: playlists.items
+        .filter((playlist) => playlist.selected)
+        .map((playlist) => ({ id: playlist.id, ownerId: playlist.owner.id })),
+    };
+
     setExportLoading(true);
 
     try {
       const response = await fetch('/api/playlists/export', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(playlists.items.filter((playlist) => playlist.selected)),
+        body: JSON.stringify(exportRequestBody),
       });
 
       if (response.ok) {

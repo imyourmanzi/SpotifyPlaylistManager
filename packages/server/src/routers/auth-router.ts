@@ -3,8 +3,8 @@ import { Static, Type } from '@sinclair/typebox';
 import { URLSearchParams } from 'node:url';
 import * as qs from 'qs';
 import {
-  PostAPIToken,
-  PostAPITokenBody,
+  PostApiTokenResponseType,
+  PostApiTokenBodyType,
   SPOTIFY_ACCOUNTS_BASE_URL,
 } from '@spotify-playlist-manager/spotify-sdk';
 import { environment as env } from '../environments/environment';
@@ -112,7 +112,7 @@ export const router: FastifyPluginAsyncTypebox = async (fastify) => {
         grant_type: 'authorization_code',
         code: code,
         redirect_uri: env.redirectURI,
-      } as PostAPITokenBody);
+      } as PostApiTokenBodyType);
 
       const apiTokenRequestOptions: RequestOptions = {
         method: 'POST',
@@ -130,8 +130,12 @@ export const router: FastifyPluginAsyncTypebox = async (fastify) => {
         const apiTokenResponse = await makeRequest(API_TOKEN_URI, apiTokenRequestOptions);
 
         const apiTokenBody =
-          (await apiTokenResponse.body.json()) as PostAPIToken<'access'>;
+          (await apiTokenResponse.body.json()) as PostApiTokenResponseType;
         const { access_token, refresh_token } = apiTokenBody;
+
+        if (!refresh_token) {
+          return reply.status(400).send({ error: 'invalid_token' });
+        }
 
         // return the tokens back to the caller so it can make requests
         return reply.send({
@@ -140,9 +144,7 @@ export const router: FastifyPluginAsyncTypebox = async (fastify) => {
         });
       } catch (error) {
         console.error('Failed to get access and refresh tokens', error);
-        return reply.status(400).send({
-          error: 'invalid_token',
-        });
+        return reply.status(400).send({ error: 'invalid_token' });
       }
     },
   );
@@ -167,7 +169,7 @@ export const router: FastifyPluginAsyncTypebox = async (fastify) => {
       const requestData = new URLSearchParams({
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
-      } as PostAPITokenBody);
+      } as PostApiTokenBodyType);
 
       const requestOptions: RequestOptions = {
         method: 'POST',
@@ -183,7 +185,7 @@ export const router: FastifyPluginAsyncTypebox = async (fastify) => {
 
       try {
         const response = await makeRequest(API_TOKEN_URI, requestOptions);
-        const { access_token } = (await response.body.json()) as PostAPIToken;
+        const { access_token } = (await response.body.json()) as PostApiTokenResponseType;
 
         return reply.send({
           access_token,
