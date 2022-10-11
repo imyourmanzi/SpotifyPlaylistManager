@@ -24,6 +24,7 @@ fastify.get('/healthcheck', (_, reply) => reply.status(200).send());
 // register API routes
 fastify.register(
   async (apiInstance) => {
+    apiInstance.decorateRequest('spotify', null);
     await apiInstance.register(authRouter, { prefix: authPrefix });
     await apiInstance.register(playlistsRouter, { prefix: playlistsPrefix });
   },

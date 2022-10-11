@@ -6,7 +6,7 @@ import { BodySpotifyTokenType } from '../shared/schemas/spotify-token-schema';
 
 declare module 'fastify' {
   interface FastifyRequest {
-    webApi: AxiosInstance;
+    spotify: AxiosInstance;
   }
 }
 
@@ -18,8 +18,7 @@ const decorateRequestWithWebApiClient: FastifyPluginAsyncTypebox<
   fastify.addHook<{ Body: Partial<BodySpotifyTokenType> }>(
     'preHandler',
     async (request) => {
-      const { token } = request.body;
-      fastify.decorateRequest('webApi', createWebApiClient(token));
+      request.spotify = createWebApiClient(request.body.token);
     },
   );
 };
