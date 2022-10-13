@@ -82,11 +82,13 @@ export const Me = () => {
     }
 
     setLoadingStates({ ...loadingStates, newToken: true });
-    fetch(
-      `/api/auth/refresh_token?${new URLSearchParams({
-        refresh_token: refreshToken,
-      }).toString()}`,
-    )
+    fetch('/api/auth/refresh_token', {
+      method: 'POST',
+      body: JSON.stringify({
+        refreshToken,
+      }),
+      headers: { 'Content-Type': 'application/json' },
+    })
       .then(async (response) => {
         const { access_token, error } = await response.json();
 

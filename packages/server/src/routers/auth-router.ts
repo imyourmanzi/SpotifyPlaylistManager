@@ -3,11 +3,12 @@ import { Static, Type } from '@sinclair/typebox';
 import { URLSearchParams } from 'node:url';
 import * as qs from 'qs';
 import {
-  PostAPIToken,
-  PostAPITokenBody,
+  PostApiTokenResponseType,
+  PostApiTokenBodyType,
   SPOTIFY_ACCOUNTS_BASE_URL,
 } from '@spotify-playlist-manager/spotify-sdk';
 import { environment as env } from '../environments/environment';
+import { HeadersContentTypeJsonType } from '../shared/schemas/content-type-schemas';
 import { makeRequest, RequestOptions } from '../shared/utils/make-request';
 import { generateRandomString } from '../shared/utils/strings';
 
@@ -33,15 +34,21 @@ type GetCallbackResponseType =
   | Static<typeof GetCallbackResponse['200']>
   | Static<typeof GetCallbackResponse['400']>;
 
-const GetRefreshTokenResponse = {
-  200: Type.Object({ access_token: Type.String() }),
+const PostRefreshTokenBody = Type.Object({
+  refreshToken: Type.String(),
+});
+type PostRefreshTokenBodyType = Static<typeof PostRefreshTokenBody>;
+
+const PostRefreshTokenResponse = {
+  200: Type.Object({
+    access_token: Type.String(),
+    refresh_token: Type.Optional(Type.String()),
+  }),
   500: Type.Object({ error: Type.Literal('refresh_failure') }),
 };
-type GetRefreshTokenResponseType =
-  | Static<typeof GetRefreshTokenResponse['200']>
-  | Static<typeof GetRefreshTokenResponse['500']>;
-
-const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID ?? 'b80440eadf0a4f989bba93e5b4ff2fc5';
+type PostRefreshTokenResponseType =
+  | Static<typeof PostRefreshTokenResponse['200']>
+  | Static<typeof PostRefreshTokenResponse['500']>;
 
 const API_TOKEN_URI = `${SPOTIFY_ACCOUNTS_BASE_URL}/api/token`;
 const STATE_KEY = 'spotify_auth_state';
@@ -68,7 +75,7 @@ export const router: FastifyPluginAsyncTypebox = async (fastify) => {
       const scope = 'user-read-private user-read-email playlist-read-private';
       const authRedirectURI = `${SPOTIFY_ACCOUNTS_BASE_URL}/authorize?${qs.stringify({
         response_type: 'code',
-        client_id: CLIENT_ID,
+        client_id: env.clientId,
         scope,
         redirect_uri: env.redirectURI,
         state,
@@ -105,14 +112,14 @@ export const router: FastifyPluginAsyncTypebox = async (fastify) => {
         grant_type: 'authorization_code',
         code: code,
         redirect_uri: env.redirectURI,
-      } as PostAPITokenBody);
+      } as PostApiTokenBodyType);
 
       const apiTokenRequestOptions: RequestOptions = {
         method: 'POST',
         body: apiTokenRequestData.toString(),
         headers: {
           authorization: `Basic ${Buffer.from(
-            `${CLIENT_ID}:${env.spotifySecret}`,
+            `${env.clientId}:${env.spotifySecret}`,
           ).toString('base64')}`,
           'content-type': 'application/x-www-form-urlencoded',
         },
@@ -123,8 +130,12 @@ export const router: FastifyPluginAsyncTypebox = async (fastify) => {
         const apiTokenResponse = await makeRequest(API_TOKEN_URI, apiTokenRequestOptions);
 
         const apiTokenBody =
-          (await apiTokenResponse.body.json()) as PostAPIToken<'access'>;
+          (await apiTokenResponse.body.json()) as PostApiTokenResponseType;
         const { access_token, refresh_token } = apiTokenBody;
+
+        if (!refresh_token) {
+          return reply.status(400).send({ error: 'invalid_token' });
+        }
 
         // return the tokens back to the caller so it can make requests
         return reply.send({
@@ -133,30 +144,38 @@ export const router: FastifyPluginAsyncTypebox = async (fastify) => {
         });
       } catch (error) {
         console.error('Failed to get access and refresh tokens', error);
-        return reply.status(400).send({
-          error: 'invalid_token',
-        });
+        return reply.status(400).send({ error: 'invalid_token' });
       }
     },
   );
 
   // request new access token from refresh token
-  fastify.get<{ Reply: GetRefreshTokenResponseType }>(
+  fastify.post<{
+    Headers: HeadersContentTypeJsonType;
+    Body: PostRefreshTokenBodyType;
+    Reply: PostRefreshTokenResponseType;
+  }>(
     '/refresh_token',
-    { schema: { response: GetRefreshTokenResponse } },
+    {
+      schema: {
+        headers: fastify.getSchema('headers.contentType:json'),
+        body: PostRefreshTokenBody,
+        response: PostRefreshTokenResponse,
+      },
+    },
     async (request, reply) => {
-      const { refresh_token } = request.query as Record<string, string>;
+      const { refreshToken } = request.body;
 
       const requestData = new URLSearchParams({
         grant_type: 'refresh_token',
-        refresh_token: refresh_token,
-      } as PostAPITokenBody);
+        refresh_token: refreshToken,
+      } as PostApiTokenBodyType);
 
       const requestOptions: RequestOptions = {
         method: 'POST',
         headers: {
           authorization: `Basic ${Buffer.from(
-            `${CLIENT_ID}:${env.spotifySecret}`,
+            `${env.clientId}:${env.spotifySecret}`,
           ).toString('base64')}`,
           'content-type': 'application/x-www-form-urlencoded',
         },
@@ -166,7 +185,7 @@ export const router: FastifyPluginAsyncTypebox = async (fastify) => {
 
       try {
         const response = await makeRequest(API_TOKEN_URI, requestOptions);
-        const { access_token } = (await response.body.json()) as PostAPIToken;
+        const { access_token } = (await response.body.json()) as PostApiTokenResponseType;
 
         return reply.send({
           access_token,
