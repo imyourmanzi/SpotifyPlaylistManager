@@ -22,7 +22,7 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/spotify-sdk"],
+      "outputs": ["{workspaceRoot}/coverage/packages/spotify-sdk"],
       "options": {
         "jestConfig": "packages/spotify-sdk/jest.config.ts",
         "passWithNoTests": true
