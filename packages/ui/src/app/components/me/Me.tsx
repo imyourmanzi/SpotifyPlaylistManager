@@ -74,9 +74,10 @@ export const Me = () => {
           setLoadingStates({ ...loadingStates, me: false });
         });
     },
-    // purposefully leaving out `errors` so we don't constantly retry when the toast closes
+    // purposefully leaving out `errors` and `loadingStates` so we don't constantly retry
+    // either when the toast closes or twice when loading states are updated
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [accessToken, loadingStates],
+    [accessToken],
   );
 
   const fetchNewToken = () => {
