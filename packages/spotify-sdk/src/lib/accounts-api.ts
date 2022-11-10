@@ -18,7 +18,7 @@ export const PostApiTokenBody = Type.Union([
     refresh_token: Type.String(),
   }),
 ]);
-export type PostApiTokenBodyType = Static<typeof PostApiTokenBody>;
+export type PostApiTokenBody = Static<typeof PostApiTokenBody>;
 
 /**
  * Response for `POST /api/token`
@@ -34,4 +34,4 @@ export const PostApiTokenResponse = Type.Intersect([
     expires_in: Type.Number(),
   }),
 ]);
-export type PostApiTokenResponseType = Static<typeof PostApiTokenResponse>;
+export type PostApiTokenResponse = Static<typeof PostApiTokenResponse>;

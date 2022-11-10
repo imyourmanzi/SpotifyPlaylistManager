@@ -4,12 +4,14 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { Client as Styletron } from 'styletron-engine-atomic';
 import { Provider as StyletronProvider } from 'styletron-react';
-import { SpotifyAuthProvider } from '@spotify-playlist-manager/ui/contexts/spotify-auth/SpotifyAuth';
+import { SpotifyAuthProvider } from './app/contexts/spotify-auth/SpotifyAuth';
 import App from './app/app';
 
 const engine = new Styletron();
 
-const rootElement = document.getElementById('root')!;
+const rootElement =
+  document.getElementById('root') ??
+  document.body.appendChild(document.createElement('div'));
 
 const getLightThemeQuery = () => window.matchMedia('(prefers-color-scheme: light)');
 
@@ -34,7 +36,7 @@ const AppWithProviders = () => {
 
     // this is the cleanup function to remove the listener
     return () => mediaQuery.removeEventListener('change', updateTheme);
-  }, []);
+  }, [updateTheme]);
 
   return (
     <StyletronProvider value={engine}>

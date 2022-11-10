@@ -7,11 +7,11 @@ import { Navigation, NavigationProps } from 'baseui/side-navigation';
 import { DisplayMedium, ParagraphSmall } from 'baseui/typography';
 import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { Home } from '@spotify-playlist-manager/ui/components/home/Home';
-import { Me } from '@spotify-playlist-manager/ui/components/me/Me';
-import { Playlists } from '@spotify-playlist-manager/ui/components/playlists/Playlists';
-import { SpotifyLoginCallbackHandler } from '@spotify-playlist-manager/ui/components/spotify-login-callback-handler/SpotifyLoginCallbackHandler';
-import { useSpotifyAuth } from '@spotify-playlist-manager/ui/contexts/spotify-auth/SpotifyAuth';
+import { Home } from './components/home/Home';
+import { Me } from './components/me/Me';
+import { Playlists } from './components/playlists/Playlists';
+import { SpotifyLoginCallbackHandler } from './components/spotify-login-callback-handler/SpotifyLoginCallbackHandler';
+import { useSpotifyAuth } from './contexts/spotify-auth/SpotifyAuth';
 import { StyledLink } from 'baseui/link';
 
 const DEFAULT_PAGE = '/';

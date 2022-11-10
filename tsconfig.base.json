@@ -17,8 +17,7 @@
     "paths": {
       "@spotify-playlist-manager/server/*": ["packages/server/src/*"],
       "@spotify-playlist-manager/spotify-sdk": ["packages/spotify-sdk/src/index.ts"],
-      "@spotify-playlist-manager/ui/components/*": ["packages/ui/src/app/components/*"],
-      "@spotify-playlist-manager/ui/contexts/*": ["packages/ui/src/app/contexts/*"]
+      "@spotify-playlist-manager/ui/*": ["packages/ui/src/app/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

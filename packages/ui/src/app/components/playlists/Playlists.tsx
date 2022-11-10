@@ -18,16 +18,16 @@ import { Pagination } from 'baseui/pagination';
 import { TableBuilder, TableBuilderColumn } from 'baseui/table-semantic';
 import { toaster, ToasterContainer } from 'baseui/toast';
 import { ParagraphSmall } from 'baseui/typography';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   SPOTIFY_WEB_API_BASE_URL,
-  GetCurrentUserPlaylistsResponseType,
+  GetCurrentUserPlaylistsResponse,
 } from '@spotify-playlist-manager/spotify-sdk';
-import { Logout } from '@spotify-playlist-manager/ui/components/logout/Logout';
-import { useSpotifyAuth } from '@spotify-playlist-manager/ui/contexts/spotify-auth/SpotifyAuth';
+import { Logout } from '../logout/Logout';
+import { useSpotifyAuth } from '../../contexts/spotify-auth/SpotifyAuth';
 
-type Playlists = Omit<GetCurrentUserPlaylistsResponseType, 'items'> & {
-  items: (GetCurrentUserPlaylistsResponseType['items'][number] & {
+type Playlists = Omit<GetCurrentUserPlaylistsResponse, 'items'> & {
+  items: (GetCurrentUserPlaylistsResponse['items'][number] & {
     selected?: boolean;
   })[];
 };
@@ -92,50 +92,57 @@ export const Playlists = () => {
     });
   };
 
-  const getUserPlaylists = async () => {
-    if (!accessToken || requestLoading || requestError) {
-      return;
-    }
+  const getUserPlaylists = useCallback(
+    async () => {
+      if (!accessToken || requestLoading || requestError) {
+        return;
+      }
 
-    const requestQuery = new URLSearchParams({
-      offset: ((page - 1) * TABLE_ROWS).toString(10),
-      limit: TABLE_ROWS.toString(10),
-    });
+      const requestQuery = new URLSearchParams({
+        offset: ((page - 1) * TABLE_ROWS).toString(10),
+        limit: TABLE_ROWS.toString(10),
+      });
 
-    // starting the request
-    setRequestLoading(true);
+      // starting the request
+      setRequestLoading(true);
 
-    try {
-      const playlistsResponse = await fetch(
-        `${SPOTIFY_WEB_API_BASE_URL}/me/playlists?${requestQuery.toString()}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-      const playlistsData =
-        (await playlistsResponse.json()) as GetCurrentUserPlaylistsResponseType;
-
-      if (playlistsData.error) {
-        setRequestError(true);
-        toaster.negative(
-          <p>
-            Unable to retrieve your playlists, please refresh or <Logout /> and back in
-            again
-          </p>,
+      try {
+        const playlistsResponse = await fetch(
+          `${SPOTIFY_WEB_API_BASE_URL}/me/playlists?${requestQuery.toString()}`,
           {
-            autoHideDuration: 4000,
-            onClose: () => setRequestError(false),
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
           },
         );
-      } else {
-        setPlaylists(playlistsData);
+        const playlistsData =
+          (await playlistsResponse.json()) as GetCurrentUserPlaylistsResponse;
+
+        if (playlistsData.error) {
+          setRequestError(true);
+          toaster.negative(
+            <p>
+              Unable to retrieve your playlists, please refresh or <Logout /> and back in
+              again
+            </p>,
+            {
+              autoHideDuration: 4000,
+              onClose: () => setRequestError(false),
+            },
+          );
+        } else {
+          setPlaylists(playlistsData);
+        }
+      } finally {
+        setRequestLoading(false);
       }
-    } finally {
-      setRequestLoading(false);
-    }
-  };
+    },
+    // leaving out `requestError` and `requestLoading` so the playlists aren't continuously
+    // re-fetched in case of errors or based on either of the two times the loading state
+    // changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [accessToken, page],
+  );
 
   /**
    * Request a full export of checked playlists and trigger a pop-up to download it.
@@ -192,7 +199,7 @@ export const Playlists = () => {
 
   useEffect(() => {
     getUserPlaylists();
-  }, [accessToken, page]);
+  }, [getUserPlaylists]);
 
   const Paganitaor = () => (
     <Pagination

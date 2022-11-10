@@ -4,19 +4,19 @@ import fp from 'fastify-plugin';
 import { URLSearchParams } from 'node:url';
 import * as qs from 'qs';
 import {
-  PostApiTokenResponseType,
-  PostApiTokenBodyType,
+  PostApiTokenResponse,
+  PostApiTokenBody,
   SPOTIFY_ACCOUNTS_BASE_URL,
 } from '@spotify-playlist-manager/spotify-sdk';
 import { environment as env } from '../../environments/environment';
-import { HeadersContentTypeJsonType } from '../../shared/schemas/content-type-schemas';
+import { HeadersContentTypeJson } from '../../shared/schemas/content-type-schemas';
 import { makeRequest, RequestOptions } from '../../shared/utils/make-request';
 import { generateRandomString } from '../../shared/utils/strings';
 
 const GetLoginResponse = {
   200: Type.Object({ authRedirect: Type.String() }),
 };
-type GetLoginResponseType = Static<typeof GetLoginResponse['200']>;
+type GetLoginResponse = Static<typeof GetLoginResponse['200']>;
 
 const GetCallbackResponse = {
   200: Type.Object({
@@ -31,14 +31,14 @@ const GetCallbackResponse = {
     ]),
   }),
 };
-type GetCallbackResponseType =
+type GetCallbackResponse =
   | Static<typeof GetCallbackResponse['200']>
   | Static<typeof GetCallbackResponse['400']>;
 
 const PostRefreshTokenBody = Type.Object({
   refreshToken: Type.String(),
 });
-type PostRefreshTokenBodyType = Static<typeof PostRefreshTokenBody>;
+type PostRefreshTokenBody = Static<typeof PostRefreshTokenBody>;
 
 const PostRefreshTokenResponse = {
   200: Type.Object({
@@ -47,7 +47,7 @@ const PostRefreshTokenResponse = {
   }),
   500: Type.Object({ error: Type.Literal('refresh_failure') }),
 };
-type PostRefreshTokenResponseType =
+type PostRefreshTokenResponse =
   | Static<typeof PostRefreshTokenResponse['200']>
   | Static<typeof PostRefreshTokenResponse['500']>;
 
@@ -63,7 +63,7 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
   await fastify.register(
     async (prefixedInstance) => {
       // request authorization
-      prefixedInstance.get<{ Reply: GetLoginResponseType }>(
+      prefixedInstance.get<{ Reply: GetLoginResponse }>(
         '/login',
         { schema: { response: GetLoginResponse } },
         async (_, reply) => {
@@ -84,7 +84,7 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
       );
 
       // request refresh and access tokens after checking the state parameter
-      prefixedInstance.get<{ Reply: GetCallbackResponseType }>(
+      prefixedInstance.get<{ Reply: GetCallbackResponse }>(
         '/callback',
         { schema: { response: GetCallbackResponse } },
         async (request, reply) => {
@@ -110,7 +110,7 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
             grant_type: 'authorization_code',
             code: code,
             redirect_uri: env.redirectURI,
-          } as PostApiTokenBodyType);
+          } as PostApiTokenBody);
 
           const apiTokenRequestOptions: RequestOptions = {
             method: 'POST',
@@ -131,7 +131,7 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
             );
 
             const apiTokenBody =
-              (await apiTokenResponse.body.json()) as PostApiTokenResponseType;
+              (await apiTokenResponse.body.json()) as PostApiTokenResponse;
             const { access_token, refresh_token } = apiTokenBody;
 
             if (!refresh_token) {
@@ -152,9 +152,9 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
 
       // request new access token from refresh token
       prefixedInstance.post<{
-        Headers: HeadersContentTypeJsonType;
-        Body: PostRefreshTokenBodyType;
-        Reply: PostRefreshTokenResponseType;
+        Headers: HeadersContentTypeJson;
+        Body: PostRefreshTokenBody;
+        Reply: PostRefreshTokenResponse;
       }>(
         '/refresh_token',
         {
@@ -170,7 +170,7 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
           const requestData = new URLSearchParams({
             grant_type: 'refresh_token',
             refresh_token: refreshToken,
-          } as PostApiTokenBodyType);
+          } as PostApiTokenBody);
 
           const requestOptions: RequestOptions = {
             method: 'POST',
@@ -186,8 +186,7 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
 
           try {
             const response = await makeRequest(API_TOKEN_URI, requestOptions);
-            const { access_token } =
-              (await response.body.json()) as PostApiTokenResponseType;
+            const { access_token } = (await response.body.json()) as PostApiTokenResponse;
 
             return reply.send({
               access_token,

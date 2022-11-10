@@ -4,11 +4,11 @@ import type { AxiosInstance } from 'axios';
 import fp from 'fastify-plugin';
 import { URL } from 'url';
 import {
-  GetMeResponseType,
+  GetMeResponse,
   GetPlaylistResponse,
-  GetPlaylistTracksResponseType,
+  GetPlaylistTracksResponse,
 } from '@spotify-playlist-manager/spotify-sdk';
-import { HeadersContentTypeJsonType } from '../../shared/schemas/content-type-schemas';
+import { HeadersContentTypeJson } from '../../shared/schemas/content-type-schemas';
 import { BodySpotifyToken } from '../../shared/schemas/spotify-token-schema';
 
 const PostPlaylistsExportBody = Type.Intersect([
@@ -23,7 +23,7 @@ const PostPlaylistsExportBody = Type.Intersect([
   }),
 ]);
 
-export type PostPlaylistsExportBodyType = Static<typeof PostPlaylistsExportBody>;
+export type PostPlaylistsExportBody = Static<typeof PostPlaylistsExportBody>;
 
 const PostPlaylistsExportResponse = {
   200: Type.Array(
@@ -35,7 +35,7 @@ const PostPlaylistsExportResponse = {
     ]),
   ),
 };
-export type PostPlaylistsExportResponseType = Static<
+export type PostPlaylistsExportResponse = Static<
   typeof PostPlaylistsExportResponse['200']
 >;
 
@@ -54,7 +54,7 @@ const getAllPlaylistTracks = async (
   nextRequest:
     | string
     | null = `${spotify.defaults.baseURL}/playlists/${playlistId}/tracks`,
-  accumulatedResponse: GetPlaylistTracksResponseType = {
+  accumulatedResponse: GetPlaylistTracksResponse = {
     href: '',
     items: [],
     limit: 50,
@@ -63,7 +63,7 @@ const getAllPlaylistTracks = async (
     previous: null,
     total: 0,
   },
-): Promise<GetPlaylistTracksResponseType> => {
+): Promise<GetPlaylistTracksResponse> => {
   if (nextRequest == null) {
     return accumulatedResponse;
   }
@@ -72,7 +72,7 @@ const getAllPlaylistTracks = async (
   url.searchParams.set('limit', '50');
   url.searchParams.sort();
 
-  const { data } = await spotify.get<GetPlaylistTracksResponseType>(url.toString());
+  const { data } = await spotify.get<GetPlaylistTracksResponse>(url.toString());
 
   const updatedAccumulation = {
     ...accumulatedResponse,
@@ -94,9 +94,9 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
   await fastify.register(
     async (prefixedInstance) => {
       prefixedInstance.post<{
-        Headers: HeadersContentTypeJsonType;
-        Body: PostPlaylistsExportBodyType;
-        Reply: PostPlaylistsExportResponseType;
+        Headers: HeadersContentTypeJson;
+        Body: PostPlaylistsExportBody;
+        Reply: PostPlaylistsExportResponse;
       }>(
         '/export',
         {
@@ -109,11 +109,11 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
         async (request, reply) => {
           const { playlists } = request.body;
 
-          const meResponse = await request.spotify.get<GetMeResponseType>('/me');
+          const meResponse = await request.spotify.get<GetMeResponse>('/me');
           const { id: userId } = meResponse.data;
 
           // hydrate the playlists
-          type HydratedPlaylist = PostPlaylistsExportResponseType[number];
+          type HydratedPlaylist = PostPlaylistsExportResponse[number];
           const hydratedPlaylists = await Promise.all(
             playlists.map(async ({ id, ownerId }) => {
               const userIsOwner = ownerId === userId;

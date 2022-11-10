@@ -7,4 +7,4 @@ export const HeadersContentTypeJson = Type.Object(
   { $id: 'headers.contentType:json' },
 );
 
-export type HeadersContentTypeJsonType = Static<typeof HeadersContentTypeJson>;
+export type HeadersContentTypeJson = Static<typeof HeadersContentTypeJson>;
