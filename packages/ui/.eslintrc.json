@@ -4,11 +4,7 @@
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-      "rules": {
-        "baseui/deprecated-theme-api": "warn",
-        "baseui/deprecated-component-api": "warn",
-        "baseui/no-deep-imports": "warn"
-      }
+      "rules": {}
     },
     {
       "files": ["*.ts", "*.tsx"],

@@ -1,7 +1,7 @@
 import { useStyletron } from 'baseui';
 import { StyledLink } from 'baseui/link';
 import { useNavigate } from 'react-router-dom';
-import { useSpotifyAuth } from '@spotify-playlist-manager/ui/contexts/spotify-auth/SpotifyAuth';
+import { useSpotifyAuth } from '../../contexts/spotify-auth/SpotifyAuth';
 
 export const Logout = () => {
   const navigate = useNavigate();

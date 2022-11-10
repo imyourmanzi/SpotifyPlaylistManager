@@ -1,4 +1,4 @@
-import { useSpotifyAuth } from '@spotify-playlist-manager/ui/contexts/spotify-auth/SpotifyAuth';
+import { useSpotifyAuth } from '../../contexts/spotify-auth/SpotifyAuth';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -30,7 +30,7 @@ export const SpotifyLoginCallbackHandler = () => {
         setRefreshToken(refresh_token);
       },
     );
-  }, []);
+  }, [location.search, setAccessToken, setRefreshToken]);
 
   useEffect(() => {
     if (!accessToken || !refreshToken) {
@@ -38,7 +38,7 @@ export const SpotifyLoginCallbackHandler = () => {
     }
 
     navigate('/me');
-  }, [accessToken, refreshToken]);
+  }, [navigate, accessToken, refreshToken]);
 
-  return <></>;
+  return null;
 };

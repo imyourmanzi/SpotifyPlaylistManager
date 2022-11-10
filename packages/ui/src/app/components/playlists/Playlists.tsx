@@ -18,13 +18,13 @@ import { Pagination } from 'baseui/pagination';
 import { TableBuilder, TableBuilderColumn } from 'baseui/table-semantic';
 import { toaster, ToasterContainer } from 'baseui/toast';
 import { ParagraphSmall } from 'baseui/typography';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   SPOTIFY_WEB_API_BASE_URL,
   GetCurrentUserPlaylistsResponseType,
 } from '@spotify-playlist-manager/spotify-sdk';
-import { Logout } from '@spotify-playlist-manager/ui/components/logout/Logout';
-import { useSpotifyAuth } from '@spotify-playlist-manager/ui/contexts/spotify-auth/SpotifyAuth';
+import { Logout } from '../logout/Logout';
+import { useSpotifyAuth } from '../../contexts/spotify-auth/SpotifyAuth';
 
 type Playlists = Omit<GetCurrentUserPlaylistsResponseType, 'items'> & {
   items: (GetCurrentUserPlaylistsResponseType['items'][number] & {
@@ -92,7 +92,7 @@ export const Playlists = () => {
     });
   };
 
-  const getUserPlaylists = async () => {
+  const getUserPlaylists = useCallback(async () => {
     if (!accessToken || requestLoading || requestError) {
       return;
     }
@@ -135,7 +135,7 @@ export const Playlists = () => {
     } finally {
       setRequestLoading(false);
     }
-  };
+  }, [accessToken, page, requestError, requestLoading]);
 
   /**
    * Request a full export of checked playlists and trigger a pop-up to download it.
@@ -192,7 +192,7 @@ export const Playlists = () => {
 
   useEffect(() => {
     getUserPlaylists();
-  }, [accessToken, page]);
+  }, [getUserPlaylists]);
 
   const Paganitaor = () => (
     <Pagination

@@ -2,12 +2,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
 import { useStyletron } from 'baseui';
 import { Button } from 'baseui/button';
+import { Heading, HeadingLevel } from 'baseui/heading';
 import { toaster, ToasterContainer } from 'baseui/toast';
 import { ParagraphLarge } from 'baseui/typography';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSpotifyAuth } from '@spotify-playlist-manager/ui/contexts/spotify-auth/SpotifyAuth';
-import { Heading, HeadingLevel } from 'baseui/heading';
+import { useSpotifyAuth } from '../../contexts/spotify-auth/SpotifyAuth';
 
 export const Home = () => {
   const [css, theme] = useStyletron();
@@ -22,7 +22,7 @@ export const Home = () => {
    * Convenience function to show a generic error message for this simple component.
    * Ensures multiple duplicate errors are not shown.
    */
-  const showErrorToast = () => {
+  const showErrorToast = useCallback(() => {
     if (!hasError) {
       setHasError(true);
       toaster.negative('Login is currently unavailable', {
@@ -30,7 +30,7 @@ export const Home = () => {
         onClose: () => setHasError(false),
       });
     }
-  };
+  }, [hasError]);
 
   // get the server to generate the redirect URL, but then place it in the DOM
   useEffect(() => {
@@ -45,7 +45,7 @@ export const Home = () => {
         setRedirectUri(authRedirect);
       })
       .catch(() => showErrorToast());
-  }, []);
+  }, [accessToken, refreshToken, redirectUri, showErrorToast]);
 
   const navigate = useNavigate();
 
