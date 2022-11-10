@@ -15,6 +15,7 @@ export type SpotifyWebApiClientOptions = {};
 const decorateRequestWithWebApiClient: FastifyPluginAsyncTypebox<
   SpotifyWebApiClientOptions
 > = async (fastify) => {
+  fastify.decorateRequest('spotify', null);
   fastify.addHook<{ Body: Partial<BodySpotifyTokenType> }>(
     'preHandler',
     async (request) => {
@@ -23,9 +24,7 @@ const decorateRequestWithWebApiClient: FastifyPluginAsyncTypebox<
   );
 };
 
-export const SpotifyWebApiClient = fp(decorateRequestWithWebApiClient, {
+export default fp(decorateRequestWithWebApiClient, {
   fastify: '4.x',
   name: 'spotify-web-api-client',
 });
-
-export default SpotifyWebApiClient;
