@@ -16,10 +16,10 @@ const decorateRequestWithWebApiClient: FastifyPluginAsyncTypebox<
   SpotifyWebApiClientOptions
 > = async (fastify) => {
   fastify.decorateRequest('spotify', null);
-  fastify.addHook<{ Body: Partial<BodySpotifyTokenType> }>(
+  fastify.addHook<{ Body?: Partial<BodySpotifyTokenType> }>(
     'preHandler',
     async (request) => {
-      request.spotify = createWebApiClient(request.body.token);
+      request.spotify = createWebApiClient(request.body?.token);
     },
   );
 };
