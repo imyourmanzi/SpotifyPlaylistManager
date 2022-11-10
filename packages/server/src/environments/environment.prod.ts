@@ -1,6 +1,6 @@
-import { environmentBase } from './environment.base';
+import { environmentBase, EnvironmentConfig } from './environment.base';
 
-export const environment = {
+export const environment: EnvironmentConfig = {
   ...environmentBase,
   production: true,
   redirectURI: 'TODO: set the prod redirect URI',
