@@ -40,7 +40,7 @@ export const GetMeResponse = Type.Intersect([
     uri: Type.String(),
   }),
 ]);
-export type GetMeResponseType = Static<typeof GetMeResponse>;
+export type GetMeResponse = Static<typeof GetMeResponse>;
 
 /**
  * Response for `GET /playlists/{playlist_id}`.
@@ -205,7 +205,7 @@ export const GetPlaylistResponse = Type.Intersect([
     uri: Type.String(),
   }),
 ]);
-export type GetPlaylistResponseType = Static<typeof GetPlaylistResponse>;
+export type GetPlaylistResponse = Static<typeof GetPlaylistResponse>;
 
 /**
  * Response for `GET /playlist/{playlist_id}/tracks`
@@ -325,7 +325,7 @@ export const GetPlaylistTracksResponse = Type.Intersect([
     total: Type.Number(),
   }),
 ]);
-export type GetPlaylistTracksResponseType = Static<typeof GetPlaylistTracksResponse>;
+export type GetPlaylistTracksResponse = Static<typeof GetPlaylistTracksResponse>;
 
 /**
  * Response for `GET /me/playlists`
@@ -380,7 +380,7 @@ export const GetCurrentUserPlaylistsResponse = Type.Intersect([
     total: Type.Number(),
   }),
 ]);
-export type GetCurrentUserPlaylistsResponseType = Static<
+export type GetCurrentUserPlaylistsResponse = Static<
   typeof GetCurrentUserPlaylistsResponse
 >;
 

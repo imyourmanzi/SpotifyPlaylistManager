@@ -7,9 +7,9 @@ import { StyledLink } from 'baseui/link';
 import { toaster, ToasterContainer } from 'baseui/toast';
 import { LabelSmall, MonoLabelSmall, ParagraphSmall } from 'baseui/typography';
 import { useEffect, useState } from 'react';
+import type { GetMeResponse } from '@spotify-playlist-manager/spotify-sdk';
 import { Logout } from '../logout/Logout';
 import { useSpotifyAuth } from '../../contexts/spotify-auth/SpotifyAuth';
-import { GetMeResponseType } from '@spotify-playlist-manager/spotify-sdk';
 
 /**
  * A property for each request type this component makes, allowing storing state to be
@@ -36,7 +36,7 @@ export const Me = () => {
     newToken: false,
   });
 
-  const [userData, setUserData] = useState<GetMeResponseType | null>(null);
+  const [userData, setUserData] = useState<GetMeResponse | null>(null);
   const [css] = useStyletron();
 
   useEffect(
@@ -52,7 +52,7 @@ export const Me = () => {
         },
       })
         .then(async (response) => {
-          const data = (await response.json()) as GetMeResponseType;
+          const data = (await response.json()) as GetMeResponse;
 
           if (data.error) {
             setErrors({ ...errors, me: true });

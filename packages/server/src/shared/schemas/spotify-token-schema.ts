@@ -7,4 +7,4 @@ export const BodySpotifyToken = Type.Object(
   { $id: 'body.spotifyToken' },
 );
 
-export type BodySpotifyTokenType = Static<typeof BodySpotifyToken>;
+export type BodySpotifyToken = Static<typeof BodySpotifyToken>;

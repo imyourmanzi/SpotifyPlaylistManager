@@ -21,13 +21,13 @@ import { ParagraphSmall } from 'baseui/typography';
 import { useCallback, useEffect, useState } from 'react';
 import {
   SPOTIFY_WEB_API_BASE_URL,
-  GetCurrentUserPlaylistsResponseType,
+  GetCurrentUserPlaylistsResponse,
 } from '@spotify-playlist-manager/spotify-sdk';
 import { Logout } from '../logout/Logout';
 import { useSpotifyAuth } from '../../contexts/spotify-auth/SpotifyAuth';
 
-type Playlists = Omit<GetCurrentUserPlaylistsResponseType, 'items'> & {
-  items: (GetCurrentUserPlaylistsResponseType['items'][number] & {
+type Playlists = Omit<GetCurrentUserPlaylistsResponse, 'items'> & {
+  items: (GetCurrentUserPlaylistsResponse['items'][number] & {
     selected?: boolean;
   })[];
 };
@@ -116,7 +116,7 @@ export const Playlists = () => {
           },
         );
         const playlistsData =
-          (await playlistsResponse.json()) as GetCurrentUserPlaylistsResponseType;
+          (await playlistsResponse.json()) as GetCurrentUserPlaylistsResponse;
 
         if (playlistsData.error) {
           setRequestError(true);
