@@ -4,4 +4,5 @@ export const environment = {
   ...environmentBase,
   production: true,
   redirectURI: 'TODO: set the prod redirect URI',
+  logConfig: true,
 };

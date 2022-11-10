@@ -1,21 +1,22 @@
-import Fastify from 'fastify';
-import FastifyCookie from '@fastify/cookie';
+import fastify from 'fastify';
+import cookie from '@fastify/cookie';
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import * as qs from 'qs';
+import { environment } from './environments/environment';
 import spotifyWebApiClient from './plugins/spotify-web-api-client';
 import authRoutes from './routes/auth';
 import playlistsRoutes from './routes/playlists';
 import { HeadersContentTypeJson } from './shared/schemas/content-type-schemas';
 
 // set up server
-export const server = Fastify({
-  logger: true,
+export const server = fastify({
+  logger: environment.logConfig,
   querystringParser: (str) => qs.parse(str),
 }).withTypeProvider<TypeBoxTypeProvider>();
 
 server.addSchema(HeadersContentTypeJson);
 
-server.register(FastifyCookie);
+server.register(cookie);
 
 server.get('/healthcheck', (_, reply) => reply.status(200).send());
 
@@ -23,7 +24,7 @@ server.get('/healthcheck', (_, reply) => reply.status(200).send());
 server.register(
   async (apiInstance) => {
     // API plugins
-    server.register(spotifyWebApiClient);
+    await apiInstance.register(spotifyWebApiClient);
 
     // API routes
     await apiInstance.register(authRoutes);
