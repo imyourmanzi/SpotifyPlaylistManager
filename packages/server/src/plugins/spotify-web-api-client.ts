@@ -10,7 +10,7 @@ declare module 'fastify' {
   }
 }
 
-export type SpotifyWebApiClientOptions = {};
+export type SpotifyWebApiClientOptions = Record<string, never>;
 
 const decorateRequestWithWebApiClient: FastifyPluginAsyncTypebox<
   SpotifyWebApiClientOptions
