@@ -92,7 +92,7 @@ const getAllPlaylistTracks = async (
  */
 const routes: FastifyPluginAsyncTypebox = async (fastify) => {
   await fastify.register(
-    (prefixedInstance) => {
+    async (prefixedInstance) => {
       prefixedInstance.post<{
         Headers: HeadersContentTypeJsonType;
         Body: PostPlaylistsExportBodyType;

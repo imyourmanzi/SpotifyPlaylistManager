@@ -61,7 +61,7 @@ const STATE_KEY = 'spotify_auth_state';
  */
 const routes: FastifyPluginAsyncTypebox = async (fastify) => {
   await fastify.register(
-    (prefixedInstance) => {
+    async (prefixedInstance) => {
       // request authorization
       prefixedInstance.get<{ Reply: GetLoginResponseType }>(
         '/login',
