@@ -4,8 +4,8 @@ import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import * as qs from 'qs';
 import { environment } from './environments/environment';
 import spotifyWebApiClient from './plugins/spotify-web-api-client';
-import authRoutes from './routes/auth';
-import playlistsRoutes from './routes/playlists';
+import authRoutes from './routes/api/auth';
+import playlistsRoutes from './routes/api/playlists';
 import { HeadersContentTypeJson } from './shared/schemas/content-type-schemas';
 
 // set up server

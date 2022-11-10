@@ -8,10 +8,10 @@ import {
   PostApiTokenBodyType,
   SPOTIFY_ACCOUNTS_BASE_URL,
 } from '@spotify-playlist-manager/spotify-sdk';
-import { environment as env } from '../environments/environment';
-import { HeadersContentTypeJsonType } from '../shared/schemas/content-type-schemas';
-import { makeRequest, RequestOptions } from '../shared/utils/make-request';
-import { generateRandomString } from '../shared/utils/strings';
+import { environment as env } from '../../environments/environment';
+import { HeadersContentTypeJsonType } from '../../shared/schemas/content-type-schemas';
+import { makeRequest, RequestOptions } from '../../shared/utils/make-request';
+import { generateRandomString } from '../../shared/utils/strings';
 
 const GetLoginResponse = {
   200: Type.Object({ authRedirect: Type.String() }),
