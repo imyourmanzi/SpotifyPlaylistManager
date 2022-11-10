@@ -8,8 +8,8 @@ import {
   GetPlaylistResponse,
   GetPlaylistTracksResponseType,
 } from '@spotify-playlist-manager/spotify-sdk';
-import { HeadersContentTypeJsonType } from '../shared/schemas/content-type-schemas';
-import { BodySpotifyToken } from '../shared/schemas/spotify-token-schema';
+import { HeadersContentTypeJsonType } from '../../shared/schemas/content-type-schemas';
+import { BodySpotifyToken } from '../../shared/schemas/spotify-token-schema';
 
 const PostPlaylistsExportBody = Type.Intersect([
   BodySpotifyToken,
