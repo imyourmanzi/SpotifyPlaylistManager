@@ -5,9 +5,15 @@ import { FlexGrid, FlexGridItem } from 'baseui/flex-grid';
 import { Heading, HeadingLevel } from 'baseui/heading';
 import { StyledLink } from 'baseui/link';
 import { toaster, ToasterContainer } from 'baseui/toast';
-import { LabelSmall, MonoLabelSmall, ParagraphSmall } from 'baseui/typography';
+import {
+  LabelSmall,
+  MonoLabelSmall,
+  MonoParagraphSmall,
+  ParagraphSmall,
+} from 'baseui/typography';
 import { useEffect, useState } from 'react';
 import type { GetMeResponse } from '@spotify-playlist-manager/spotify-sdk';
+import { CodeBlock } from '../code-block/CodeBlock';
 import { Logout } from '../logout/Logout';
 import { useSpotifyAuth } from '../../contexts/spotify-auth/SpotifyAuth';
 
@@ -140,7 +146,7 @@ export const Me = () => {
             <LabelSmall>Display Name</LabelSmall>
             <ParagraphSmall>{userData.display_name}</ParagraphSmall>
             <LabelSmall>ID</LabelSmall>
-            <ParagraphSmall>{userData.id}</ParagraphSmall>
+            <MonoParagraphSmall>{userData.id}</MonoParagraphSmall>
             <LabelSmall>Email</LabelSmall>
             <ParagraphSmall>{userData.email}</ParagraphSmall>
             <LabelSmall>Spotify URI</LabelSmall>
@@ -164,9 +170,13 @@ export const Me = () => {
             <HeadingLevel>
               <Heading>OAuth Details</Heading>
               <LabelSmall>Access token</LabelSmall>
-              <ParagraphSmall>{accessToken}</ParagraphSmall>
+              <CodeBlock>
+                <MonoParagraphSmall>{accessToken}</MonoParagraphSmall>
+              </CodeBlock>
               <LabelSmall>Refresh token</LabelSmall>
-              <ParagraphSmall>{refreshToken}</ParagraphSmall>
+              <CodeBlock>
+                <MonoParagraphSmall>{refreshToken}</MonoParagraphSmall>
+              </CodeBlock>
               <Button
                 size="mini"
                 disabled={!refreshToken}
