@@ -1,15 +1,15 @@
 import type { FastifyPluginAsyncTypebox } from '@fastify/type-provider-typebox';
 import { Static, Type } from '@sinclair/typebox';
 import type { AxiosInstance } from 'axios';
+import fp from 'fastify-plugin';
+import { URL } from 'url';
 import {
   GetMeResponseType,
   GetPlaylistResponse,
   GetPlaylistTracksResponseType,
 } from '@spotify-playlist-manager/spotify-sdk';
-import { SpotifyWebApiClient } from '../plugins/spotify-web-api-client';
 import { HeadersContentTypeJsonType } from '../shared/schemas/content-type-schemas';
 import { BodySpotifyToken } from '../shared/schemas/spotify-token-schema';
-import { URL } from 'url';
 
 const PostPlaylistsExportBody = Type.Intersect([
   BodySpotifyToken,
@@ -38,11 +38,6 @@ const PostPlaylistsExportResponse = {
 export type PostPlaylistsExportResponseType = Static<
   typeof PostPlaylistsExportResponse['200']
 >;
-
-/**
- * The server path prefix intended to be used with the router.
- */
-export const prefix = '/playlists';
 
 /**
  * Load all tracks in a playlist.
@@ -95,54 +90,65 @@ const getAllPlaylistTracks = async (
  *  a Spotify account.
  * @param fastify the Fastify server the router is attached to
  */
-export const router: FastifyPluginAsyncTypebox = async (fastify) => {
-  fastify.register(SpotifyWebApiClient);
+const routes: FastifyPluginAsyncTypebox = async (fastify) => {
+  await fastify.register(
+    async (prefixedInstance) => {
+      prefixedInstance.post<{
+        Headers: HeadersContentTypeJsonType;
+        Body: PostPlaylistsExportBodyType;
+        Reply: PostPlaylistsExportResponseType;
+      }>(
+        '/export',
+        {
+          schema: {
+            headers: prefixedInstance.getSchema('headers.contentType:json'),
+            body: PostPlaylistsExportBody,
+            response: PostPlaylistsExportResponse,
+          },
+        },
+        async (request, reply) => {
+          const { playlists } = request.body;
 
-  fastify.post<{
-    Headers: HeadersContentTypeJsonType;
-    Body: PostPlaylistsExportBodyType;
-    Reply: PostPlaylistsExportResponseType;
-  }>(
-    '/export',
-    {
-      schema: {
-        headers: fastify.getSchema('headers.contentType:json'),
-        body: PostPlaylistsExportBody,
-        response: PostPlaylistsExportResponse,
-      },
-    },
-    async (request, reply) => {
-      const { playlists } = request.body;
+          const meResponse = await request.spotify.get<GetMeResponseType>('/me');
+          const { id: userId } = meResponse.data;
 
-      const meResponse = await request.spotify.get<GetMeResponseType>('/me');
-      const { id: userId } = meResponse.data;
+          // hydrate the playlists
+          type HydratedPlaylist = PostPlaylistsExportResponseType[number];
+          const hydratedPlaylists = await Promise.all(
+            playlists.map(async ({ id, ownerId }) => {
+              const userIsOwner = ownerId === userId;
 
-      // hydrate the playlists
-      type HydratedPlaylist = PostPlaylistsExportResponseType[number];
-      const hydratedPlaylists = await Promise.all(
-        playlists.map(async ({ id, ownerId }) => {
-          const userIsOwner = ownerId === userId;
+              let playlist: HydratedPlaylist;
+              ({ data: playlist } = await request.spotify.get<HydratedPlaylist>(
+                `/playlists/${id}`,
+                // don't immediately fetch tracks, we may not need them
+                { params: { fields: '(!tracks)' } },
+              ));
 
-          let playlist: HydratedPlaylist;
-          ({ data: playlist } = await request.spotify.get<HydratedPlaylist>(
-            `/playlists/${id}`,
-            // don't immediately fetch tracks, we may not need them
-            { params: { fields: '(!tracks)' } },
-          ));
+              // if the user is the owner, then we'll fetch the tracks
+              if (userIsOwner && !playlist.error) {
+                playlist = {
+                  ...playlist,
+                  tracks: await getAllPlaylistTracks(request.spotify, id),
+                };
+              }
 
-          // if the user is the owner, then we'll fetch the tracks
-          if (userIsOwner && !playlist.error) {
-            playlist = {
-              ...playlist,
-              tracks: await getAllPlaylistTracks(request.spotify, id),
-            };
-          }
+              return playlist;
+            }),
+          );
 
-          return playlist;
-        }),
+          return reply.send(hydratedPlaylists);
+        },
       );
-
-      return reply.send(hydratedPlaylists);
     },
+    { prefix: '/playlists' },
   );
 };
+
+export default fp(routes, {
+  fastify: '4.x',
+  dependencies: ['spotify-web-api-client'],
+  decorators: {
+    request: ['spotify'],
+  },
+});

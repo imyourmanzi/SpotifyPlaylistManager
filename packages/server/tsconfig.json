@@ -4,8 +4,7 @@
     "lib": ["ES2022"],
     "module": "commonjs",
     "target": "ES2022",
-    "strict": true,
-    "exactOptionalPropertyTypes": true
+    "strict": true
   },
   "files": [],
   "include": [],
