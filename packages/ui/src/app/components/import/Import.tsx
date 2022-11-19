@@ -1,72 +1,102 @@
-import { useEffect, useRef, useState } from 'react';
+import { styled } from 'baseui';
 import { FileUploader } from 'baseui/file-uploader';
+import { Heading, HeadingLevel } from 'baseui/heading';
+import { LabelSmall, ParagraphMedium } from 'baseui/typography';
+import { useState } from 'react';
 
-// https://overreacted.io/making-setinterval-declarative-with-react-hooks/
-const useInterval = (callback: () => void, delay: number | null) => {
-  const savedCallback = useRef(() => {
-    console.log('asdfadsf');
-  });
-  // Remember the latest callback.
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-  // Set up the interval.
-  useEffect((): (() => void) | void => {
-    function tick() {
-      savedCallback.current();
-    }
-    if (delay !== null) {
-      const id = setInterval(tick, delay);
-      return () => clearInterval(id);
-    }
-  }, [delay]);
+type RejectedFilesWarningProps = {
+  rejectedFiles: File[];
+  additionalMessage?: string;
 };
 
-// useFakeProgress is an elaborate way to show a fake file transfer for illustrative purposes. You
-// don't need this is your application. Use metadata from your upload destination if it's available,
-// or don't provide progress.
-const useFakeProgress = (): [number, string, () => void, () => void] => {
-  const [fakeProgress, setFakeProgress] = useState(0);
-  const [isActive, setIsActive] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  function stopFakeProgress() {
-    setIsActive(false);
-    setErrorMessage('');
-    setFakeProgress(0);
+const WarningLabelSmall = styled(LabelSmall, ({ $theme }) => ({
+  margin: '10px',
+  color: $theme.colors.warning,
+}));
+
+const RejectedFilesWarning = ({
+  rejectedFiles,
+  additionalMessage,
+}: RejectedFilesWarningProps) => {
+  const count = rejectedFiles.length;
+
+  if (!count) {
+    return null;
   }
-  function startFakeProgress() {
-    setIsActive(true);
-  }
-  useInterval(
-    () => {
-      if (fakeProgress >= 40) {
-        // stopFakeProgress();
-        setErrorMessage('Upload failed... connection was lost.');
-      } else {
-        setFakeProgress(fakeProgress + 10);
-      }
-    },
-    isActive ? 500 : null,
+
+  return (
+    <>
+      <WarningLabelSmall>
+        {count === 1 ? 'This' : 'These'} file{count === 1 ? '' : 's'} cannot be processed:{' '}
+        {rejectedFiles.map((file) => file.name).join(', ')}
+      </WarningLabelSmall>
+      {additionalMessage ? (
+        <WarningLabelSmall>{additionalMessage}</WarningLabelSmall>
+      ) : null}
+    </>
   );
-  return [fakeProgress, errorMessage, startFakeProgress, stopFakeProgress];
 };
 
 export const Import = () => {
-  const [progressAmount, errorMessage, startFakeProgress, stopFakeProgress] =
-    useFakeProgress();
+  const [rejectedFiles, setRejectedFiles] = useState<File[]>([]);
+  const [acceptedFile, setAcceptedFile] = useState<File | null>(null);
+  const [importErrorMessage, setImportErrorMessage] = useState('');
+  const [progressOrDone, setProgressOrDone] = useState(0);
+
+  const resetFile = () => {
+    setAcceptedFile(null);
+  };
+
+  const processFileForImport = (file: File) => {
+    setAcceptedFile(file);
+
+    const result = new Promise<string>((resolve) => setTimeout(resolve, 3000));
+    result.then(
+      () => {
+        setProgressOrDone(100);
+      },
+      (error) => {
+        setImportErrorMessage(error);
+      },
+    );
+  };
+
   return (
-    <FileUploader
-      errorMessage={errorMessage}
-      onRetry={stopFakeProgress}
-      onCancel={stopFakeProgress}
-      onDrop={(acceptedFiles, rejectedFiles) => {
-        // handle file upload...
-        console.log(acceptedFiles, rejectedFiles);
-        startFakeProgress();
-      }}
-      // progressAmount is a number from 0 - 100 which indicates the percent of file transfer completed
-      progressAmount={progressAmount}
-      progressMessage={progressAmount ? `Uploading... ${progressAmount}% of 100%` : ''}
-    />
+    <HeadingLevel>
+      <Heading>Import</Heading>
+      <ParagraphMedium>Import one JSON file at a time.</ParagraphMedium>
+      <FileUploader
+        accept=".json"
+        multiple={false}
+        errorMessage={importErrorMessage}
+        onRetry={resetFile}
+        onCancel={resetFile}
+        onDrop={(accepted, rejected) => {
+          setRejectedFiles([]);
+          if (rejected.length) {
+            setRejectedFiles(rejected);
+          }
+
+          if (!accepted.length) {
+            return;
+          }
+
+          // only allow processing the first file
+          processFileForImport(accepted[0]);
+        }}
+        // progressAmount={progressOrDone || undefined}
+        progressMessage={
+          acceptedFile
+            ? `Processing ${acceptedFile.name} for import...${
+                progressOrDone === 100 ? 'Done!' : ''
+              }`
+            : ''
+        }
+      />
+      <RejectedFilesWarning
+        rejectedFiles={rejectedFiles}
+        additionalMessage="Please choose a single JSON file."
+      />
+    </HeadingLevel>
   );
 };
