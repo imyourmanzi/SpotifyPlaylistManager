@@ -8,6 +8,7 @@ import { DisplayMedium, ParagraphSmall } from 'baseui/typography';
 import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { Home } from './components/home/Home';
+import { Import } from './components/import/Import';
 import { Me } from './components/me/Me';
 import { Playlists } from './components/playlists/Playlists';
 import { SpotifyLoginCallbackHandler } from './components/spotify-login-callback-handler/SpotifyLoginCallbackHandler';
@@ -55,6 +56,10 @@ export function App() {
           title: 'Playlists',
           itemId: '/playlists',
         },
+        {
+          title: 'Import',
+          itemId: '/import',
+        },
       ],
     });
   }
@@ -90,6 +95,7 @@ export function App() {
             <Route path="/callback" element={<SpotifyLoginCallbackHandler />} />
             <Route path="/me" element={<Me />} />
             <Route path="/playlists" element={<Playlists />} />
+            <Route path="/import" element={<Import />} />
           </Routes>
         </Cell>
       </Grid>
