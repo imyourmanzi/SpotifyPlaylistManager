@@ -37,28 +37,75 @@ const RejectedFilesWarning = ({
   );
 };
 
+const SuccessLabelSmall = styled(LabelSmall, ({ $theme }) => ({
+  margin: '10px',
+  color: $theme.colors.positive,
+}));
+
+const SuccessfulImport = ({ file, loading }: { file: File | null; loading: boolean }) => {
+  if (loading || !file) {
+    return null;
+  }
+
+  return <SuccessLabelSmall>Successfully imported {file.name}!</SuccessLabelSmall>;
+};
+
 export const Import = () => {
   const [rejectedFiles, setRejectedFiles] = useState<File[]>([]);
   const [acceptedFile, setAcceptedFile] = useState<File | null>(null);
-  const [importErrorMessage, setImportErrorMessage] = useState('');
-  const [progressOrDone, setProgressOrDone] = useState(0);
+  const [importLoading, setImportLoading] = useState(false);
+  const [importErrorMessage, setImportErrorMessage] = useState<string | null>(null);
 
-  const resetFile = () => {
+  const resetProcessingStates = () => {
+    setRejectedFiles([]);
     setAcceptedFile(null);
+    setImportLoading(false);
+    setImportErrorMessage('');
   };
 
   const processFileForImport = (file: File) => {
     setAcceptedFile(file);
+    setImportLoading(true);
 
-    const result = new Promise<string>((resolve) => setTimeout(resolve, 3000));
-    result.then(
-      () => {
-        setProgressOrDone(100);
-      },
-      (error) => {
-        setImportErrorMessage(error);
-      },
-    );
+    const importFileData = new FormData();
+    importFileData.append('importData', file);
+
+    Promise.all([
+      // send the file to the server for import
+      fetch('/api/import', {
+        headers: {
+          accept: 'application/json',
+        },
+        method: 'POST',
+        body: importFileData,
+      }),
+      // also artificially inflate the import time so users don't see an awkward flash if
+      // the file processes extremely quickly
+      new Promise<void>((resolve) => setTimeout(resolve, 250)),
+    ])
+      .then(
+        async ([response]) => {
+          if (response.status >= 500) {
+            const responseInfo = await response.json();
+            setImportErrorMessage(responseInfo.error);
+            return;
+          }
+
+          if (response.status >= 400) {
+            setRejectedFiles([file]);
+            return;
+          }
+        },
+        (error) => {
+          setImportErrorMessage(error);
+        },
+      )
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        setImportLoading(false);
+      });
   };
 
   return (
@@ -66,17 +113,21 @@ export const Import = () => {
       <Heading>Import</Heading>
       <ParagraphMedium>Import one JSON file at a time.</ParagraphMedium>
       <FileUploader
-        accept=".json"
+        accept="application/json"
+        maxSize={1 * 1000 * 1000}
         multiple={false}
-        errorMessage={importErrorMessage}
-        onRetry={resetFile}
-        onCancel={resetFile}
+        {...(importErrorMessage ? { errorMessage: importErrorMessage } : {})}
+        onRetry={resetProcessingStates}
         onDrop={(accepted, rejected) => {
-          setRejectedFiles([]);
+          // reset state
+          resetProcessingStates();
+
+          // update rejected files, if any
           if (rejected.length) {
             setRejectedFiles(rejected);
           }
 
+          // don't process if there are no files we can process
           if (!accepted.length) {
             return;
           }
@@ -84,19 +135,17 @@ export const Import = () => {
           // only allow processing the first file
           processFileForImport(accepted[0]);
         }}
-        // progressAmount={progressOrDone || undefined}
         progressMessage={
-          acceptedFile
-            ? `Processing ${acceptedFile.name} for import...${
-                progressOrDone === 100 ? 'Done!' : ''
-              }`
-            : ''
+          acceptedFile && importLoading ? `Importing ${acceptedFile.name}` : ''
         }
+        // replace the cancel button because these requests are not cancellable
+        overrides={{ CancelButtonComponent: { component: () => <p></p> } }}
       />
       <RejectedFilesWarning
         rejectedFiles={rejectedFiles}
-        additionalMessage="Please choose a single JSON file."
+        additionalMessage="Please choose a single JSON file that is 1 MB or less."
       />
+      <SuccessfulImport file={acceptedFile} loading={importLoading} />
     </HeadingLevel>
   );
 };
