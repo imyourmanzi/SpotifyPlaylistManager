@@ -26,16 +26,21 @@ const PostImportResponse = {
     message: Type.String(),
   }),
 };
-export type PostImportResponse =
+type PostImportResponse =
   | Static<typeof PostImportResponse['200']>
   | Static<typeof PostImportResponse['400']>;
+
+/**
+ * 1 megabyte (MB) in bytes.
+ */
+const MEGABYTE = 1000 * 1000;
 
 const routes: FastifyPluginAsyncTypebox = async (fastify) => {
   // use multipart processing for file upload
   await fastify.register(multipart, {
     limits: {
       files: 1,
-      fileSize: 1 * 1000 * 1000,
+      fileSize: MEGABYTE,
       // borrowing these other limits from the fastify-multipart README
       fieldNameSize: 100,
       fieldSize: 100,

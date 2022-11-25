@@ -85,11 +85,6 @@ const getAllPlaylistTracks = async (
   return getAllPlaylistTracks(spotify, playlistId, data.next, updatedAccumulation);
 };
 
-/**
- * A router plugin encapsulating all routes design for authentication and authorization to
- *  a Spotify account.
- * @param fastify the Fastify server the router is attached to
- */
 const routes: FastifyPluginAsyncTypebox = async (fastify) => {
   await fastify.register(
     async (prefixedInstance) => {

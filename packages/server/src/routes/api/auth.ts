@@ -54,11 +54,6 @@ type PostRefreshTokenResponse =
 const API_TOKEN_URI = `${SPOTIFY_ACCOUNTS_BASE_URL}/api/token`;
 const STATE_KEY = 'spotify_auth_state';
 
-/**
- * A router plugin encapsulating all routes design for authentication and authorization to
- *  a Spotify account.
- * @param fastify the Fastify server the router is attached to
- */
 const routes: FastifyPluginAsyncTypebox = async (fastify) => {
   await fastify.register(
     async (prefixedInstance) => {
