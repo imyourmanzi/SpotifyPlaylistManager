@@ -2,7 +2,10 @@ import type { FastifyPluginAsyncTypebox } from '@fastify/type-provider-typebox';
 import { createWebApiClient } from '@spotify-playlist-manager/spotify-sdk';
 import type { AxiosInstance } from 'axios';
 import fp from 'fastify-plugin';
-import { BodySpotifyToken } from '../shared/schemas/spotify-token-schema';
+import type {
+  BodySpotifyToken,
+  HeadersSpotifyToken,
+} from '../shared/schemas/spotify-token-schema';
 
 declare module 'fastify' {
   interface FastifyRequest {
@@ -17,8 +20,17 @@ const decorateRequestWithWebApiClient: FastifyPluginAsyncTypebox<
 > = async (fastify) => {
   fastify.decorateRequest('spotify', null);
 
-  fastify.addHook<{ Body?: Partial<BodySpotifyToken> }>('preHandler', async (request) => {
-    request.spotify = createWebApiClient(request.body?.token);
+  fastify.addHook<{
+    Headers?: Partial<HeadersSpotifyToken>;
+    Body?: Partial<BodySpotifyToken>;
+  }>('preHandler', async (request) => {
+    // initialize a Spotify web API client with a token from, in order of precedence
+    // 1. the `x-spotify-token` header
+    // 2. the request body's `token` property
+    // 3. `undefined`
+    request.spotify = createWebApiClient(
+      request.headers?.['x-spotify-token'] ?? request.body?.token,
+    );
   });
 };
 
