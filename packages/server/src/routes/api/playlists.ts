@@ -8,10 +8,10 @@ import {
   GetPlaylistResponse,
   GetPlaylistTracksResponse,
 } from '@spotify-playlist-manager/spotify-sdk';
-import { HeadersContentTypeJson } from '../../shared/schemas/content-type-schemas';
+import type { HeadersContentTypeJson } from '../../shared/schemas/content-type-schemas';
 import { BodySpotifyToken } from '../../shared/schemas/spotify-token-schema';
 
-const PostPlaylistsExportBody = Type.Intersect([
+export const PostPlaylistsExportBody = Type.Intersect([
   BodySpotifyToken,
   Type.Object({
     playlists: Type.Array(
@@ -22,10 +22,9 @@ const PostPlaylistsExportBody = Type.Intersect([
     ),
   }),
 ]);
-
 export type PostPlaylistsExportBody = Static<typeof PostPlaylistsExportBody>;
 
-const PostPlaylistsExportResponse = {
+export const PostPlaylistsExportResponse = {
   200: Type.Array(
     Type.Intersect([
       Type.Omit(GetPlaylistResponse, ['tracks']),
@@ -35,9 +34,7 @@ const PostPlaylistsExportResponse = {
     ]),
   ),
 };
-export type PostPlaylistsExportResponse = Static<
-  typeof PostPlaylistsExportResponse['200']
->;
+export type PostPlaylistsExportResponse = Static<typeof PostPlaylistsExportResponse[200]>;
 
 /**
  * Load all tracks in a playlist.

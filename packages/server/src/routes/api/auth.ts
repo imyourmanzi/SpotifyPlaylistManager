@@ -13,12 +13,12 @@ import { HeadersContentTypeJson } from '../../shared/schemas/content-type-schema
 import { makeRequest, RequestOptions } from '../../shared/utils/make-request';
 import { generateRandomString } from '../../shared/utils/strings';
 
-const GetLoginResponse = {
+export const GetLoginResponse = {
   200: Type.Object({ authRedirect: Type.String() }),
 };
-type GetLoginResponse = Static<typeof GetLoginResponse['200']>;
+export type GetLoginResponse = Static<typeof GetLoginResponse[200]>;
 
-const GetCallbackResponse = {
+export const GetCallbackResponse = {
   200: Type.Object({
     access_token: Type.String(),
     refresh_token: Type.String(),
@@ -31,25 +31,25 @@ const GetCallbackResponse = {
     ]),
   }),
 };
-type GetCallbackResponse =
-  | Static<typeof GetCallbackResponse['200']>
-  | Static<typeof GetCallbackResponse['400']>;
+export type GetCallbackResponse =
+  | Static<typeof GetCallbackResponse[200]>
+  | Static<typeof GetCallbackResponse[400]>;
 
-const PostRefreshTokenBody = Type.Object({
+export const PostRefreshTokenBody = Type.Object({
   refreshToken: Type.String(),
 });
-type PostRefreshTokenBody = Static<typeof PostRefreshTokenBody>;
+export type PostRefreshTokenBody = Static<typeof PostRefreshTokenBody>;
 
-const PostRefreshTokenResponse = {
+export const PostRefreshTokenResponse = {
   200: Type.Object({
     access_token: Type.String(),
     refresh_token: Type.Optional(Type.String()),
   }),
   500: Type.Object({ error: Type.Literal('refresh_failure') }),
 };
-type PostRefreshTokenResponse =
-  | Static<typeof PostRefreshTokenResponse['200']>
-  | Static<typeof PostRefreshTokenResponse['500']>;
+export type PostRefreshTokenResponse =
+  | Static<typeof PostRefreshTokenResponse[200]>
+  | Static<typeof PostRefreshTokenResponse[500]>;
 
 const API_TOKEN_URI = `${SPOTIFY_ACCOUNTS_BASE_URL}/api/token`;
 const STATE_KEY = 'spotify_auth_state';
@@ -65,7 +65,12 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
           const state = generateRandomString(16);
           reply.setCookie(STATE_KEY, state);
 
-          const scope = 'user-read-private user-read-email playlist-read-private';
+          const scope = [
+            'user-read-private',
+            'user-read-email',
+            'playlist-read-private',
+            'playlist-modify-private',
+          ].join(' ');
           const authRedirectURI = `${SPOTIFY_ACCOUNTS_BASE_URL}/authorize?${qs.stringify({
             response_type: 'code',
             client_id: env.clientId,
