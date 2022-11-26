@@ -76,7 +76,7 @@ export const PostImportResponse = {
       Type.Literal('file_too_large'),
       Type.Literal('invalid_format'),
     ]),
-    message: Type.String(),
+    reason: Type.String(),
   }),
 };
 export type PostImportResponse =
@@ -132,7 +132,7 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
             if (error instanceof fastify.multipartErrors.RequestFileTooLargeError) {
               return reply.status(400).send({
                 errorType: 'file_too_large',
-                message:
+                reason:
                   'The file provided was too large. Import files may be 1 MB or smaller.',
               });
             }
@@ -145,7 +145,7 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
           if (!importDataRaw || !importDataRaw.length) {
             return reply.status(400).send({
               errorType: 'no_file',
-              message: 'A file was either not provided or could not be received.',
+              reason: 'A file was either not provided or could not be received.',
             });
           }
 
@@ -156,7 +156,7 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
           } catch {
             return reply.status(400).send({
               errorType: 'invalid_format',
-              message:
+              reason:
                 'The import file must be a JSON file that was exported from the Playlists page.',
             });
           }
