@@ -45,7 +45,7 @@ server.register(
 );
 
 server.setErrorHandler((error, request, reply) => {
-  request.log.error({ error, user: request.user }, 'Error hanlding request');
+  request.log.error(error, 'Error hanlding request', { user: request.user });
   return reply
     .status(500)
     .send({ errorType: 'unknown', message: 'An error occurred on our end!' });
