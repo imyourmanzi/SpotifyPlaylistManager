@@ -1,11 +1,8 @@
 import type { FastifyPluginAsyncTypebox } from '@fastify/type-provider-typebox';
+import { BodySpotifyToken, HeadersSpotifyToken } from '@spotify-playlist-manager/schemas';
 import { createWebApiClient } from '@spotify-playlist-manager/spotify-sdk';
 import type { AxiosInstance } from 'axios';
 import fp from 'fastify-plugin';
-import type {
-  BodySpotifyToken,
-  HeadersSpotifyToken,
-} from '../shared/schemas/spotify-token-schema';
 
 declare module 'fastify' {
   interface FastifyRequest {

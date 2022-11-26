@@ -11,7 +11,7 @@ import playlistsRoutes from './routes/api/playlists';
 import {
   HeadersContentTypeForm,
   HeadersContentTypeJson,
-} from './shared/schemas/content-type-schemas';
+} from '../../schemas/src/lib/shared/content-type-schemas';
 
 // set up server configuration
 export const server = fastify({

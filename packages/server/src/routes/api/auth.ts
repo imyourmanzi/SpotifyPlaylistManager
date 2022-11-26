@@ -1,55 +1,22 @@
 import { FastifyPluginAsyncTypebox } from '@fastify/type-provider-typebox';
-import { Static, Type } from '@sinclair/typebox';
-import fp from 'fastify-plugin';
-import { URLSearchParams } from 'node:url';
-import * as qs from 'qs';
+import {
+  GetCallbackResponse,
+  GetLoginResponse,
+  HeadersContentTypeJson,
+  PostRefreshTokenBody,
+  PostRefreshTokenResponse,
+} from '@spotify-playlist-manager/schemas';
 import {
   PostApiTokenResponse,
   PostApiTokenBody,
   SPOTIFY_ACCOUNTS_BASE_URL,
 } from '@spotify-playlist-manager/spotify-sdk';
+import fp from 'fastify-plugin';
+import { URLSearchParams } from 'node:url';
+import * as qs from 'qs';
 import { environment as env } from '../../environments/environment';
-import { HeadersContentTypeJson } from '../../shared/schemas/content-type-schemas';
-import { makeRequest, RequestOptions } from '../../shared/utils/make-request';
-import { generateRandomString } from '../../shared/utils/strings';
-
-export const GetLoginResponse = {
-  200: Type.Object({ authRedirect: Type.String() }),
-};
-export type GetLoginResponse = Static<typeof GetLoginResponse[200]>;
-
-export const GetCallbackResponse = {
-  200: Type.Object({
-    access_token: Type.String(),
-    refresh_token: Type.String(),
-  }),
-  400: Type.Object({
-    error: Type.Union([
-      Type.Literal('missing_code'),
-      Type.Literal('state_mismatch'),
-      Type.Literal('invalid_token'),
-    ]),
-  }),
-};
-export type GetCallbackResponse =
-  | Static<typeof GetCallbackResponse[200]>
-  | Static<typeof GetCallbackResponse[400]>;
-
-export const PostRefreshTokenBody = Type.Object({
-  refreshToken: Type.String(),
-});
-export type PostRefreshTokenBody = Static<typeof PostRefreshTokenBody>;
-
-export const PostRefreshTokenResponse = {
-  200: Type.Object({
-    access_token: Type.String(),
-    refresh_token: Type.Optional(Type.String()),
-  }),
-  500: Type.Object({ error: Type.Literal('refresh_failure') }),
-};
-export type PostRefreshTokenResponse =
-  | Static<typeof PostRefreshTokenResponse[200]>
-  | Static<typeof PostRefreshTokenResponse[500]>;
+import { makeRequest, RequestOptions } from '../../shared/make-request';
+import { generateRandomString } from '../../shared/strings';
 
 const API_TOKEN_URI = `${SPOTIFY_ACCOUNTS_BASE_URL}/api/token`;
 const STATE_KEY = 'spotify_auth_state';

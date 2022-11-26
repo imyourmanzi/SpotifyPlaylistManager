@@ -1,5 +1,4 @@
-// fgdfhgf eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-// import type { PostImportResponse } from '@spotify-playlist-manager/server/routes/api/import';
+import { PostImportResponse } from '@spotify-playlist-manager/schemas';
 import { styled } from 'baseui';
 import { FileUploader } from 'baseui/file-uploader';
 import { Heading, HeadingLevel } from 'baseui/heading';
@@ -99,8 +98,7 @@ export const Import = () => {
     ])
       .then(
         async ([response]) => {
-          // TODO: type this response
-          const responseInfo = await response.json();
+          const responseInfo: PostImportResponse = await response.json();
 
           if (response.status >= 400) {
             if ('reason' in responseInfo) {
@@ -117,7 +115,7 @@ export const Import = () => {
               responseInfo.errors
                 .map(
                   // TODO: fix this cheat
-                  (error: Record<string, string>) =>
+                  (error) =>
                     `${error.reason} ${
                       'playlistName' in error ? `(${error.playlistName})` : ''
                     }`,

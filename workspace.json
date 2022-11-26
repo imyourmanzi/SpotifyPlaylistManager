@@ -2,6 +2,7 @@
   "$schema": "./node_modules/nx/schemas/workspace-schema.json",
   "version": 2,
   "projects": {
+    "schemas": "packages/schemas",
     "server": "packages/server",
     "spotify-sdk": "packages/spotify-sdk",
     "ui": "packages/ui"

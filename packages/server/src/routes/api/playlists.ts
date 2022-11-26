@@ -1,37 +1,13 @@
 import type { FastifyPluginAsyncTypebox } from '@fastify/type-provider-typebox';
-import { Static, Type } from '@sinclair/typebox';
+import {
+  HeadersContentTypeJson,
+  PostPlaylistsExportBody,
+  PostPlaylistsExportResponse,
+} from '@spotify-playlist-manager/schemas';
+import type { GetPlaylistTracksResponse } from '@spotify-playlist-manager/spotify-sdk';
 import type { AxiosInstance } from 'axios';
 import fp from 'fastify-plugin';
 import { URL } from 'url';
-import {
-  GetPlaylistResponse,
-  GetPlaylistTracksResponse,
-} from '@spotify-playlist-manager/spotify-sdk';
-import type { HeadersContentTypeJson } from '../../shared/schemas/content-type-schemas';
-import { BodySpotifyToken } from '../../shared/schemas/spotify-token-schema';
-
-export const PostPlaylistsExportBody = Type.Intersect([
-  BodySpotifyToken,
-  Type.Object({
-    playlists: Type.Array(
-      Type.Object({
-        id: Type.String(),
-        ownerId: Type.String(),
-      }),
-    ),
-  }),
-]);
-export type PostPlaylistsExportBody = Static<typeof PostPlaylistsExportBody>;
-
-export const PostPlaylistsExportResponse = {
-  200: Type.Array(
-    Type.Intersect([
-      Type.Omit(GetPlaylistResponse, ['tracks']),
-      Type.Partial(Type.Pick(GetPlaylistResponse, ['tracks'])),
-    ]),
-  ),
-};
-export type PostPlaylistsExportResponse = Static<typeof PostPlaylistsExportResponse[200]>;
 
 /**
  * Load all tracks in a playlist.
