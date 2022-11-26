@@ -1,6 +1,6 @@
-import type { AxiosInstance } from 'axios';
 import type { FastifyPluginAsyncTypebox } from '@fastify/type-provider-typebox';
 import { createWebApiClient } from '@spotify-playlist-manager/spotify-sdk';
+import type { AxiosInstance } from 'axios';
 import fp from 'fastify-plugin';
 import { BodySpotifyToken } from '../shared/schemas/spotify-token-schema';
 
@@ -16,6 +16,7 @@ const decorateRequestWithWebApiClient: FastifyPluginAsyncTypebox<
   SpotifyWebApiClientOptions
 > = async (fastify) => {
   fastify.decorateRequest('spotify', null);
+
   fastify.addHook<{ Body?: Partial<BodySpotifyToken> }>('preHandler', async (request) => {
     request.spotify = createWebApiClient(request.body?.token);
   });

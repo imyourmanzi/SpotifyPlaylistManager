@@ -4,7 +4,6 @@ import type { AxiosInstance } from 'axios';
 import fp from 'fastify-plugin';
 import { URL } from 'url';
 import {
-  GetMeResponse,
   GetPlaylistResponse,
   GetPlaylistTracksResponse,
 } from '@spotify-playlist-manager/spotify-sdk';
@@ -28,9 +27,7 @@ export const PostPlaylistsExportResponse = {
   200: Type.Array(
     Type.Intersect([
       Type.Omit(GetPlaylistResponse, ['tracks']),
-      Type.Object({
-        tracks: Type.Optional(GetPlaylistResponse.tracks),
-      }),
+      Type.Partial(Type.Pick(GetPlaylistResponse, ['tracks'])),
     ]),
   ),
 };
@@ -101,14 +98,11 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
         async (request, reply) => {
           const { playlists } = request.body;
 
-          const meResponse = await request.spotify.get<GetMeResponse>('/me');
-          const { id: userId } = meResponse.data;
-
           // hydrate the playlists
           type HydratedPlaylist = PostPlaylistsExportResponse[number];
           const hydratedPlaylists = await Promise.all(
             playlists.map(async ({ id, ownerId }) => {
-              const userIsOwner = ownerId === userId;
+              const userIsOwner = ownerId === request.user.id;
 
               let playlist: HydratedPlaylist;
               ({ data: playlist } = await request.spotify.get<HydratedPlaylist>(
@@ -139,8 +133,8 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
 
 export default fp(routes, {
   fastify: '4.x',
-  dependencies: ['spotify-web-api-client'],
+  dependencies: ['spotify-web-api-client', 'spotify-auth-user'],
   decorators: {
-    request: ['spotify'],
+    request: ['spotify', 'user'],
   },
 });
