@@ -7,7 +7,10 @@ import spotifyWebApiClient from './plugins/spotify-web-api-client';
 import authRoutes from './routes/api/auth';
 import importRoutes from './routes/api/import';
 import playlistsRoutes from './routes/api/playlists';
-import { HeadersContentTypeJson } from './shared/schemas/content-type-schemas';
+import {
+  HeadersContentTypeForm,
+  HeadersContentTypeJson,
+} from './shared/schemas/content-type-schemas';
 
 // set up server
 export const server = fastify({
@@ -16,6 +19,7 @@ export const server = fastify({
 }).withTypeProvider<TypeBoxTypeProvider>();
 
 server.addSchema(HeadersContentTypeJson);
+server.addSchema(HeadersContentTypeForm);
 
 server.register(cookie);
 
