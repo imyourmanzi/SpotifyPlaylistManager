@@ -88,6 +88,11 @@ export type PostImportResponse =
  */
 const MEGABYTE = 1000 * 1000;
 
+/**
+ * Number of tracks to add to the playlist in each POST request.
+ */
+const TRACKS_PER_REQUEST = 100;
+
 const routes: FastifyPluginAsyncTypebox = async (fastify) => {
   // use multipart processing for file upload
   await fastify.register(multipart, {
@@ -189,8 +194,6 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
                     collaborative: false,
                   });
 
-                  request.log.info(newPlaylistResponse);
-
                   // record playlist import
                   playlistsImported += 1;
                 } catch (error) {
@@ -239,13 +242,13 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
                 const playlistTracks = [...playlist.tracks.items];
                 tracksFound += playlistTracks.length;
 
-                // add all playlist.tracks (or up to 100 at a time)
-                for (let i = 0; i < playlistTracks.length; i += 100) {
-                  // get the next 100 tracks, or if there are less than 100 left, get all
-                  // of them
+                // add all playlist.tracks, in increments of TRACKS_PER_REQUEST
+                while (playlistTracks.length) {
+                  // get the next TRACKS_PER_REQUEST, or if there are less than that left,
+                  // get all of them
                   const tracksToAdd = playlistTracks.splice(
-                    i * 100,
-                    Math.min(100, playlistTracks.length),
+                    0,
+                    Math.min(TRACKS_PER_REQUEST, playlistTracks.length),
                   );
 
                   // create an array of just the track URIs
@@ -312,6 +315,21 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
               }
 
               // type 2: import followed playlist
+
+              // first check if the playlist owner is the same as the requester's ID
+              // (can't follow)
+              if (playlist.owner.id === userId) {
+                return [
+                  {
+                    errorType: 'not_followed',
+                    playlistHref: playlist.href,
+                    playlistName: playlist.name,
+                    reason:
+                      'Playlist owner is the same as you, so you must provide a track list to import it as a new playlist, or you must import this playlist on a different account.',
+                  },
+                ];
+              }
+
               try {
                 // try following playlist
                 await request.spotify.put<
