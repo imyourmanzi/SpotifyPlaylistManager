@@ -3,9 +3,10 @@ import { FileUploader } from 'baseui/file-uploader';
 import { Heading, HeadingLevel } from 'baseui/heading';
 import { LabelSmall, ParagraphMedium } from 'baseui/typography';
 import { useState } from 'react';
+import { useSpotifyAuth } from '../../contexts/spotify-auth/SpotifyAuth';
 
 type RejectedFilesWarningProps = {
-  rejectedFiles: File[];
+  files: File[];
   additionalMessage?: string;
 };
 
@@ -15,10 +16,10 @@ const WarningLabelSmall = styled(LabelSmall, ({ $theme }) => ({
 }));
 
 const RejectedFilesWarning = ({
-  rejectedFiles,
+  files,
   additionalMessage,
 }: RejectedFilesWarningProps) => {
-  const count = rejectedFiles.length;
+  const count = files.length;
 
   if (!count) {
     return null;
@@ -28,7 +29,7 @@ const RejectedFilesWarning = ({
     <>
       <WarningLabelSmall>
         {count === 1 ? 'This' : 'These'} file{count === 1 ? '' : 's'} cannot be processed:{' '}
-        {rejectedFiles.map((file) => file.name).join(', ')}
+        {files.map((file) => file.name).join(', ')}
       </WarningLabelSmall>
       {additionalMessage ? (
         <WarningLabelSmall>{additionalMessage}</WarningLabelSmall>
@@ -51,20 +52,31 @@ const SuccessfulImport = ({ file, loading }: { file: File | null; loading: boole
 };
 
 export const Import = () => {
+  const {
+    state: { accessToken },
+  } = useSpotifyAuth();
+
+  // UI-based states
   const [rejectedFiles, setRejectedFiles] = useState<File[]>([]);
   const [acceptedFile, setAcceptedFile] = useState<File | null>(null);
+
+  // HTTP request-based states
   const [importLoading, setImportLoading] = useState(false);
+  const [failedFile, setFailedFile] = useState<File | null>(null);
   const [importErrorMessage, setImportErrorMessage] = useState<string | null>(null);
 
   const resetProcessingStates = () => {
+    // UI-based states
     setRejectedFiles([]);
     setAcceptedFile(null);
+
+    // HTTP request-based states
     setImportLoading(false);
+    setFailedFile(null);
     setImportErrorMessage('');
   };
 
   const processFileForImport = (file: File) => {
-    setAcceptedFile(file);
     setImportLoading(true);
 
     const importFileData = new FormData();
@@ -74,7 +86,7 @@ export const Import = () => {
       // send the file to the server for import
       fetch('/api/import', {
         headers: {
-          accept: 'application/json',
+          'x-spotify-token': accessToken,
         },
         method: 'POST',
         body: importFileData,
@@ -85,14 +97,12 @@ export const Import = () => {
     ])
       .then(
         async ([response]) => {
-          if (response.status >= 500) {
-            const responseInfo = await response.json();
-            setImportErrorMessage(responseInfo.error);
-            return;
-          }
-
           if (response.status >= 400) {
-            setRejectedFiles([file]);
+            const responseInfo = await response.json();
+            setImportErrorMessage(
+              responseInfo.error ?? responseInfo.message ?? 'An unknown error occurred',
+            );
+            setFailedFile(file);
             return;
           }
         },
@@ -133,7 +143,9 @@ export const Import = () => {
           }
 
           // only allow processing the first file
-          processFileForImport(accepted[0]);
+          const file = accepted[0];
+          setAcceptedFile(file);
+          processFileForImport(file);
         }}
         progressMessage={
           acceptedFile && importLoading ? `Importing ${acceptedFile.name}` : ''
@@ -142,10 +154,10 @@ export const Import = () => {
         overrides={{ CancelButtonComponent: { component: () => <p></p> } }}
       />
       <RejectedFilesWarning
-        rejectedFiles={rejectedFiles}
+        files={rejectedFiles}
         additionalMessage="Please choose a single JSON file that is 1 MB or less."
       />
-      <SuccessfulImport file={acceptedFile} loading={importLoading} />
+      <SuccessfulImport file={failedFile ? null : acceptedFile} loading={importLoading} />
     </HeadingLevel>
   );
 };
