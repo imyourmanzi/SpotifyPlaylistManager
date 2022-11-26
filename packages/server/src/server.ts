@@ -38,3 +38,10 @@ server.register(
   },
   { prefix: '/api' },
 );
+
+server.setErrorHandler((error, _request, reply) => {
+  server.log.error(error);
+  return reply
+    .status(500)
+    .send({ errorType: 'unknown', message: 'An error occurred on our end!' });
+});
