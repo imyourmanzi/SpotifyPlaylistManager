@@ -1,7 +1,6 @@
 import React from 'react';
 import { useStyletron } from 'baseui';
 
-// TODO: put in PR: https://stackoverflow.com/a/56026992/15114520
 export const CodeBlock: React.FunctionComponent<React.PropsWithChildren> = ({
   children,
 }) => {

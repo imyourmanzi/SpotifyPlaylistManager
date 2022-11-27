@@ -1,43 +1,13 @@
 import type { FastifyPluginAsyncTypebox } from '@fastify/type-provider-typebox';
-import { Static, Type } from '@sinclair/typebox';
+import {
+  HeadersContentTypeJson,
+  PostPlaylistsExportBody,
+  PostPlaylistsExportResponse,
+} from '@spotify-playlist-manager/schemas';
+import type { GetPlaylistTracksResponse } from '@spotify-playlist-manager/spotify-sdk';
 import type { AxiosInstance } from 'axios';
 import fp from 'fastify-plugin';
 import { URL } from 'url';
-import {
-  GetMeResponse,
-  GetPlaylistResponse,
-  GetPlaylistTracksResponse,
-} from '@spotify-playlist-manager/spotify-sdk';
-import { HeadersContentTypeJson } from '../../shared/schemas/content-type-schemas';
-import { BodySpotifyToken } from '../../shared/schemas/spotify-token-schema';
-
-const PostPlaylistsExportBody = Type.Intersect([
-  BodySpotifyToken,
-  Type.Object({
-    playlists: Type.Array(
-      Type.Object({
-        id: Type.String(),
-        ownerId: Type.String(),
-      }),
-    ),
-  }),
-]);
-
-export type PostPlaylistsExportBody = Static<typeof PostPlaylistsExportBody>;
-
-const PostPlaylistsExportResponse = {
-  200: Type.Array(
-    Type.Intersect([
-      Type.Omit(GetPlaylistResponse, ['tracks']),
-      Type.Object({
-        tracks: Type.Optional(GetPlaylistResponse.tracks),
-      }),
-    ]),
-  ),
-};
-export type PostPlaylistsExportResponse = Static<
-  typeof PostPlaylistsExportResponse['200']
->;
 
 /**
  * Load all tracks in a playlist.
@@ -85,11 +55,6 @@ const getAllPlaylistTracks = async (
   return getAllPlaylistTracks(spotify, playlistId, data.next, updatedAccumulation);
 };
 
-/**
- * A router plugin encapsulating all routes design for authentication and authorization to
- *  a Spotify account.
- * @param fastify the Fastify server the router is attached to
- */
 const routes: FastifyPluginAsyncTypebox = async (fastify) => {
   await fastify.register(
     async (prefixedInstance) => {
@@ -109,14 +74,11 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
         async (request, reply) => {
           const { playlists } = request.body;
 
-          const meResponse = await request.spotify.get<GetMeResponse>('/me');
-          const { id: userId } = meResponse.data;
-
           // hydrate the playlists
           type HydratedPlaylist = PostPlaylistsExportResponse[number];
           const hydratedPlaylists = await Promise.all(
             playlists.map(async ({ id, ownerId }) => {
-              const userIsOwner = ownerId === userId;
+              const userIsOwner = ownerId === request.user.id;
 
               let playlist: HydratedPlaylist;
               ({ data: playlist } = await request.spotify.get<HydratedPlaylist>(
@@ -147,8 +109,8 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
 
 export default fp(routes, {
   fastify: '4.x',
-  dependencies: ['spotify-web-api-client'],
+  dependencies: ['spotify-web-api-client', 'spotify-auth-user'],
   decorators: {
-    request: ['spotify'],
+    request: ['spotify', 'user'],
   },
 });

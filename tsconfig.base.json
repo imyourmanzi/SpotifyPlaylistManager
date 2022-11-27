@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@spotify-playlist-manager/schemas": ["packages/schemas/src/index.ts"],
       "@spotify-playlist-manager/server/*": ["packages/server/src/*"],
       "@spotify-playlist-manager/spotify-sdk": ["packages/spotify-sdk/src/index.ts"],
       "@spotify-playlist-manager/ui/*": ["packages/ui/src/app/*"]

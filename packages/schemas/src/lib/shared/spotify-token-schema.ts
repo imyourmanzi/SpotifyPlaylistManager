@@ -8,3 +8,12 @@ export const BodySpotifyToken = Type.Object(
 );
 
 export type BodySpotifyToken = Static<typeof BodySpotifyToken>;
+
+export const HeadersSpotifyToken = Type.Object(
+  {
+    'x-spotify-token': Type.String(),
+  },
+  { $id: 'headers.spotifyToken' },
+);
+
+export type HeadersSpotifyToken = Static<typeof HeadersSpotifyToken>;
