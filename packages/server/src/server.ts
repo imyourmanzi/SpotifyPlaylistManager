@@ -1,6 +1,10 @@
 import fastify from 'fastify';
 import cookie from '@fastify/cookie';
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
+import {
+  HeadersContentTypeForm,
+  HeadersContentTypeJson,
+} from '@spotify-playlist-manager/schemas';
 import * as qs from 'qs';
 import { environment } from './environments/environment';
 import spotifyAuthUser from './plugins/spotify-auth-user';
@@ -8,10 +12,6 @@ import spotifyWebApiClient from './plugins/spotify-web-api-client';
 import authRoutes from './routes/api/auth';
 import importRoutes from './routes/api/import';
 import playlistsRoutes from './routes/api/playlists';
-import {
-  HeadersContentTypeForm,
-  HeadersContentTypeJson,
-} from '../../schemas/src/lib/shared/content-type-schemas';
 
 // set up server configuration
 export const server = fastify({
