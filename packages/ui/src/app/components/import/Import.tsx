@@ -114,7 +114,6 @@ export const Import = () => {
             setImportErrorMessage(
               responseInfo.errors
                 .map(
-                  // TODO: fix this cheat
                   (error) =>
                     `${error.reason} ${
                       'playlistName' in error ? `(${error.playlistName})` : ''
