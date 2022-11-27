@@ -6,7 +6,18 @@ A TypeScript Node project to enable exporting and importing Spotify playlists in
 
 ### Non-Public Requests
 
-Any requests that need non-public data from Spotify need to provide the bearer token in their request body like:
+Any requests that need non-public data from Spotify need to provide the bearer token in their request. It can be provided as a header or in the body (the header takes precedence over the body, but the body should be preferred).
+
+**Headers**
+
+```js
+const headers = {
+  'x-spotify-token': '<BEARER_TOKEN>',
+  // ...other headers
+};
+```
+
+**Body**
 
 ```js
 const body = {
