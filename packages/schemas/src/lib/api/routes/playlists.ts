@@ -15,12 +15,15 @@ export const PostPlaylistsExportBody = Type.Intersect([
 ]);
 export type PostPlaylistsExportBody = Static<typeof PostPlaylistsExportBody>;
 
+export const HydratedPlaylists = Type.Array(
+  Type.Intersect([
+    Type.Omit(GetPlaylistResponse, ['tracks']),
+    Type.Partial(Type.Pick(GetPlaylistResponse, ['tracks'])),
+  ]),
+);
+export type HydratedPlaylists = Static<typeof HydratedPlaylists>;
+
 export const PostPlaylistsExportResponse = {
-  200: Type.Array(
-    Type.Intersect([
-      Type.Omit(GetPlaylistResponse, ['tracks']),
-      Type.Partial(Type.Pick(GetPlaylistResponse, ['tracks'])),
-    ]),
-  ),
+  200: Type.Object({ data: Type.String() }),
 };
 export type PostPlaylistsExportResponse = Static<typeof PostPlaylistsExportResponse[200]>;

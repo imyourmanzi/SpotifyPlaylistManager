@@ -169,13 +169,13 @@ export const Playlists = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const zipData = await response.blob();
         setExportData({
-          href: URL.createObjectURL(new Blob([JSON.stringify(data)])),
+          href: URL.createObjectURL(zipData),
           download: `playlists_${new Date()
             .toISOString()
             .replace(/[-:]/g, '')
-            .replace(/\.\d+Z$/, '')}.json`,
+            .replace(/\.\d+Z$/, '')}.zip`,
         });
         setExportModalOpen(true);
       } else {
