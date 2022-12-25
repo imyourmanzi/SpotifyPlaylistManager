@@ -68,14 +68,14 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
       prefixedInstance.post<{
         Headers: HeadersContentTypeJson;
         Body: PostPlaylistsExportBody;
-        // Reply: PostPlaylistsExportResponse;
+        // TODO: figure out how to type the Reply
       }>(
         '/export',
         {
           schema: {
             headers: prefixedInstance.getSchema('headers.contentType:json'),
             body: PostPlaylistsExportBody,
-            // response: PostPlaylistsExportResponse,
+            response: PostPlaylistsExportResponse,
           },
         },
         async (request, reply) => {

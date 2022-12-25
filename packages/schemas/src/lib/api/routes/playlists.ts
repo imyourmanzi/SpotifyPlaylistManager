@@ -24,6 +24,6 @@ export const HydratedPlaylists = Type.Array(
 export type HydratedPlaylists = Static<typeof HydratedPlaylists>;
 
 export const PostPlaylistsExportResponse = {
-  200: Type.Object({ data: Type.String() }),
+  200: Type.String({ contentEncoding: '8bit' }),
 };
 export type PostPlaylistsExportResponse = Static<typeof PostPlaylistsExportResponse[200]>;
