@@ -17,6 +17,7 @@ import type {
 } from '@spotify-playlist-manager/spotify-sdk';
 import axios, { AxiosResponse } from 'axios';
 import fp from 'fastify-plugin';
+import * as JSZip from 'jszip';
 
 /**
  * 1 megabyte (MB) in bytes.
@@ -27,6 +28,11 @@ const MEGABYTE = 1000 * 1000;
  * Number of tracks to add to the playlist in each POST request.
  */
 const TRACKS_PER_REQUEST = 100;
+
+/**
+ * Router's instance of JSZip
+ */
+const zip = new JSZip();
 
 const routes: FastifyPluginAsyncTypebox = async (fastify) => {
   // use multipart processing for file upload
@@ -87,12 +93,16 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
           // parse the JSON file data
           let importData: ImportData;
           try {
-            importData = JSON.parse(importDataRaw.toString());
-          } catch {
+            const importZipData = await zip.loadAsync(importDataRaw);
+            const importString = await importZipData
+              .filter((relativePath) => relativePath.endsWith('export.json'))[0]
+              .async('string');
+            importData = JSON.parse(importString);
+          } catch (error) {
             return reply.status(400).send({
               errorType: 'invalid_format',
               reason:
-                'The import file must be a JSON file that was exported from the Playlists page.',
+                'The import file must be an unmodified zip file that was exported from the Playlists page.',
             });
           }
 
