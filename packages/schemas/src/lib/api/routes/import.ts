@@ -1,6 +1,6 @@
 import { Static, Type } from '@sinclair/typebox';
 import { HeadersContentTypeForm, HeadersSpotifyToken } from '../../shared';
-import { PostPlaylistsExportResponse } from './playlists';
+import { HydratedPlaylists } from './playlists';
 
 export const PostImportHeaders = Type.Intersect([
   HeadersContentTypeForm,
@@ -8,7 +8,7 @@ export const PostImportHeaders = Type.Intersect([
 ]);
 export type PostImportHeaders = Static<typeof PostImportHeaders>;
 
-export type ImportData = Static<typeof PostPlaylistsExportResponse[200]>;
+export type ImportData = Static<typeof HydratedPlaylists>;
 
 export const PostImportErrorNotCreated = Type.Object({
   errorType: Type.Literal('not_created'),

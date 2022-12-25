@@ -138,9 +138,9 @@ export const Import = () => {
   return (
     <HeadingLevel>
       <Heading>Import</Heading>
-      <ParagraphMedium>Import one JSON file at a time.</ParagraphMedium>
+      <ParagraphMedium>Import one zip file at a time.</ParagraphMedium>
       <FileUploader
-        accept="application/json"
+        accept="application/zip"
         maxSize={1 * 1000 * 1000}
         multiple={false}
         {...(importErrorMessage ? { errorMessage: importErrorMessage } : {})}
@@ -172,7 +172,7 @@ export const Import = () => {
       />
       <RejectedFilesWarning
         files={rejectedFiles}
-        additionalMessage="Please choose a single JSON file that is 1 MB or less."
+        additionalMessage="Please choose a single zip file that is 1 MB or less."
       />
       <SuccessfulImport file={failedFile ? null : acceptedFile} loading={importLoading} />
     </HeadingLevel>
