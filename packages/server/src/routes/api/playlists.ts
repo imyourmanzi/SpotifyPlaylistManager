@@ -68,7 +68,7 @@ const routes: FastifyPluginAsyncTypebox = async (fastify) => {
       prefixedInstance.post<{
         Headers: HeadersContentTypeJson;
         Body: PostPlaylistsExportBody;
-        // TODO: figure out how to type the Reply
+        Reply: NodeJS.ReadableStream;
       }>(
         '/export',
         {
