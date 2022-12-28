@@ -123,6 +123,8 @@ export const Me = () => {
       });
   };
 
+  const profileUrl = userData?.images[0]?.url;
+
   return (
     <ToasterContainer>
       <HeadingLevel>
@@ -142,7 +144,7 @@ export const Me = () => {
         </FlexGrid>
         {!loadingStates.me && !errors.me && userData && (
           <>
-            <Avatar size="scale4800" src={userData.images[0].url} />
+            {profileUrl && <Avatar size="scale4800" src={profileUrl} />}
             <LabelSmall>Display Name</LabelSmall>
             <ParagraphSmall>{userData.display_name}</ParagraphSmall>
             <LabelSmall>ID</LabelSmall>
@@ -159,12 +161,14 @@ export const Me = () => {
             <ParagraphSmall>
               <StyledLink href={userData.href}>{userData.href}</StyledLink>
             </ParagraphSmall>
-            <LabelSmall>Profile Image</LabelSmall>
-            <ParagraphSmall>
-              <StyledLink href={userData.images[0].url}>
-                {userData.images[0].url}
-              </StyledLink>
-            </ParagraphSmall>
+            {profileUrl && (
+              <>
+                <LabelSmall>Profile Image</LabelSmall>
+                <ParagraphSmall>
+                  <StyledLink href={profileUrl}>{profileUrl}</StyledLink>
+                </ParagraphSmall>
+              </>
+            )}
             <LabelSmall>Country</LabelSmall>
             <ParagraphSmall>{userData.country}</ParagraphSmall>
             <HeadingLevel>
