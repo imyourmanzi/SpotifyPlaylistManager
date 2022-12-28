@@ -63,7 +63,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.2.0",
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@sinclair/typebox": "^0.24.42",
+    "@sinclair/typebox": "^0.25.16",
     "axios": "^0.27 || 1.1.0 || ^1.1.4",
     "baseui": "^12.1.2",
     "core-js": "^3.6.5",
