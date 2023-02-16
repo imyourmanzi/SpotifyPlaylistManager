@@ -77,6 +77,6 @@
     "styletron-engine-atomic": "^1.5.0",
     "styletron-react": "^6.1.0",
     "tslib": "^2.3.0",
-    "undici": "^5.8.1"
+    "undici": "^5.19.1"
   }
 }
