@@ -15,7 +15,6 @@ export const Home = () => {
     state: { accessToken, refreshToken },
   } = useSpotifyAuth();
 
-  const [redirectUri, setRedirectUri] = useState('');
   const [hasError, setHasError] = useState(false);
 
   /**
@@ -32,34 +31,29 @@ export const Home = () => {
     }
   }, [hasError]);
 
-  // get the server to generate the redirect URL, but then place it in the DOM
+  // reset the error state when dependent resources change
   useEffect(() => {
-    if ((accessToken && refreshToken) || redirectUri) {
+    if (accessToken && refreshToken) {
       return;
     }
 
     setHasError(false);
-    fetch('/api/auth/login')
-      .then(async (response) => {
-        const { authRedirect } = await response.json();
-        setRedirectUri(authRedirect);
-      })
-      .catch(() => showErrorToast());
-  }, [accessToken, refreshToken, redirectUri, showErrorToast]);
+  }, [accessToken, refreshToken]);
 
   const navigate = useNavigate();
 
   const onLoginInitiate = () => {
     if (accessToken && refreshToken) {
       navigate('me');
-    }
-
-    if (!redirectUri) {
-      showErrorToast();
       return;
     }
 
-    window.location.href = redirectUri;
+    fetch('/api/auth/login')
+      .then(async (response) => {
+        const { authRedirect } = await response.json();
+        window.location.href = authRedirect;
+      })
+      .catch(() => showErrorToast());
   };
 
   return (
