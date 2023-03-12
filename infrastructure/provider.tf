@@ -1,9 +1,9 @@
 provider "google" {
-  project = "imyourmanzi-spm"
+  project = "imyourmanzi-spotifyplaylistmgr"
   region  = var.region
 }
 
 provider "google-beta" {
-  project = "imyourmanzi-spm"
+  project = "imyourmanzi-spotifyplaylistmgr"
   region  = var.region
 }

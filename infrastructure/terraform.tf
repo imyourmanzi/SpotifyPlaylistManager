@@ -1,9 +1,10 @@
 terraform {
   cloud {
+    hostname     = "app.terraform.io"
     organization = "imyourmanzi"
 
     workspaces {
-      name = "SpotifyPlaylistManager"
+      name = "infrastructure"
     }
   }
   required_providers {

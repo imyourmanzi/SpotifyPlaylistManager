@@ -1,7 +1,7 @@
-resource "google_container_cluster" "private" {
+resource "google_container_cluster" "backend" {
   provider = google-beta
 
-  name     = "private"
+  name     = "backend"
   location = var.region
 
   network    = google_compute_network.custom.name
@@ -30,7 +30,7 @@ resource "google_container_cluster" "private" {
     }
   }
 
-  # Enable Autopilot for this cluster
+  # Enable Autopilot for this cluster to avoid base management fees
   enable_autopilot = true
 
   # Configuration of cluster IP allocation for VPC-native clusters
