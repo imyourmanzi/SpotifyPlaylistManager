@@ -1,0 +1,48 @@
+name: Terraform PR
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'infrastructure/'
+      - 'kubernetes/'
+
+jobs:
+  infrastructure:
+    name: Plan Infrastructure
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infrastructure
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          cli_config_credentials_hostname: 'app.terraform.io'
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          terraform_version: 1.4
+      - run: terraform init
+      - id: plan
+        run: terraform plan -no-color
+      - run: echo ${{ steps.plan.outputs.stdout }}
+      - run: echo ${{ steps.plan.outputs.stderr }}
+      - run: echo ${{ steps.plan.outputs.exitcode }}
+  kubernetes:
+    name: Plan Kubernetes
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: kubernetes
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          cli_config_credentials_hostname: 'app.terraform.io'
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          terraform_version: 1.4
+      - run: terraform init
+      - id: plan
+        run: terraform plan -no-color
+      - run: echo ${{ steps.plan.outputs.stdout }}
+      - run: echo ${{ steps.plan.outputs.stderr }}
+      - run: echo ${{ steps.plan.outputs.exitcode }}
