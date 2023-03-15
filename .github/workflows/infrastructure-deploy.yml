@@ -9,6 +9,8 @@ on:
     paths:
       - 'infrastructure/'
       - 'kubernetes/'
+      - '.firebaserc'
+      - 'firebase.json'
 
 jobs:
   infrastructure:

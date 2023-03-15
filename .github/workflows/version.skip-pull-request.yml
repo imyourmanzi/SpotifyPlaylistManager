@@ -3,7 +3,7 @@ on:
   pull_request:
     branches:
       - main
-    paths:
+    paths-ignore:
       - 'packages/**'
       - 'package*.json'
       - 'tsconfig.base.json'
@@ -14,4 +14,5 @@ on:
 jobs:
   check:
     name: Check
-    uses: imyourmanzi/GitHubWorkflows/.github/workflows/package-json-version-check.yml@main
+    steps:
+      - run: 'echo "No version bump required"'
