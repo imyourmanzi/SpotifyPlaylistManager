@@ -8,15 +8,24 @@ terraform {
     }
   }
   required_providers {
+    tfe = {
+      source  = "hashicorp/tfe"
+      version = "~> 0.42.0"
+    }
     google = {
       source  = "hashicorp/google"
-      version = "~> 4.47.0"
+      version = "~> 4.47"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = ">= 2.0.1"
+      version = "~> 2.0"
     }
   }
+}
+
+provider "tfe" {
+  hostname     = "app.terraform.io"
+  organization = "imyourmanzi"
 }
 
 data "tfe_outputs" "infrastructure" {
