@@ -1,16 +1,20 @@
-name: Terraform PR
+name: Deploy Application
+
+concurrency: production
+
 on:
-  pull_request:
+  push:
     branches:
       - main
-    # paths:
-    #   - 'infrastructure/'
-    #   - 'kubernetes/'
+    paths:
+      - 'infrastructure/'
+      - 'kubernetes/'
 
 jobs:
   infrastructure:
-    name: Plan Infrastructure
+    name: GCP Infrastructure
     runs-on: ubuntu-latest
+    environment: production
     defaults:
       run:
         working-directory: infrastructure
@@ -22,12 +26,12 @@ jobs:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
           terraform_version: 1.4
           terraform_wrapper: false
-      - run: terraform init
-      - run: terraform plan -no-color
-      - run: terraform validate
+      - run: 'terraform apply -auto-approve'
   kubernetes:
-    name: Plan Kubernetes
+    needs: infrastructure
+    name: Kubernetes Configuration
     runs-on: ubuntu-latest
+    environment: production
     defaults:
       run:
         working-directory: kubernetes
@@ -39,6 +43,4 @@ jobs:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
           terraform_version: 1.4
           terraform_wrapper: false
-      - run: terraform init
-      - run: terraform plan -no-color
-      - run: terraform validate
+      - run: 'terraform apply -auto-approve'
