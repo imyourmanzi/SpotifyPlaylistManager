@@ -28,6 +28,14 @@
         }
       }
     },
+    "build:docker": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": ".",
+        "command": "docker build . -t spotify-playlist-manager-server",
+        "color": true
+      }
+    },
     "serve": {
       "executor": "@nrwl/node:node",
       "options": {
