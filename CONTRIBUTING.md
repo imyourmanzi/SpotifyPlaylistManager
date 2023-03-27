@@ -14,6 +14,14 @@ Run this to check if the server is running.
 curl localhost:8888/healthcheck
 ```
 
+## Building the Server Container Locally
+
+The command for building the server in the Docker image is contained in [**server/project.json**](/packages/server/project.json).
+
+```sh
+npx nx build:docker server
+```
+
 ## Infrastructure
 
 ### Prerequisite Setup Steps (one-time)
