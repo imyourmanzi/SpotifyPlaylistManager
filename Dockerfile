@@ -7,9 +7,9 @@ WORKDIR /usr/src/build_app
 
 # install dependencies
 COPY --chown=node:node package*.json /usr/src/build_app
-RUN npm ci # --only=production <-- not sure how this would affect the need to npm run build
+RUN npm ci
 
-# build/compile the application
+# build/compile the whole application
 COPY --chown=node:node . /usr/src/build_app
 RUN npx nx run server:build:production
 
