@@ -1,6 +1,8 @@
 import { server } from './server';
+import { environment } from './environments/environment';
 
-server.listen({ port: 8888 }, (error) => {
+const { port } = environment;
+server.listen({ port }, (error) => {
   if (error) {
     server.log.error(error);
     process.exit(1);

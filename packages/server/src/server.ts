@@ -24,7 +24,7 @@ server.addSchema(HeadersContentTypeJson);
 server.addSchema(HeadersContentTypeForm);
 
 // add basic health check endpoint
-server.get('/healthcheck', (_, reply) => reply.status(200).send());
+server.get('/healthcheck', { logLevel: 'error' }, (_, reply) => reply.status(200).send());
 
 // set up API
 server.register(
