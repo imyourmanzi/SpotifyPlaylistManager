@@ -1,5 +1,4 @@
 import type { FastifyServerOptions } from 'fastify';
-import { server } from '../server';
 
 export type EnvironmentConfig = {
   // base config
@@ -16,7 +15,7 @@ export type EnvironmentConfig = {
 const { SPOTIFY_SECRET, SPOTIFY_CLIENT_ID } = process.env;
 
 if (!SPOTIFY_SECRET) {
-  server.log.fatal('Missing Spotify client secret! Exiting...');
+  console.error('Missing Spotify client secret! Exiting...');
   process.exit(1);
 }
 
