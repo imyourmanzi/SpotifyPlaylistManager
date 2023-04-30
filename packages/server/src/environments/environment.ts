@@ -13,4 +13,5 @@ export const environment: EnvironmentConfig = {
       },
     },
   },
+  host: 'localhost',
 };
