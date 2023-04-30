@@ -1,4 +1,4 @@
-data "google_project" "default" {
+data "google_project" "main" {
   provider = google-beta
 }
 
@@ -6,5 +6,5 @@ data "google_project" "default" {
 # here as a stand-in documentation
 # resource "google_firebase_project" "default" {
 #   provider = google-beta
-#   project  = data.google_project.default.project_id
+#   project  = data.google_project.main.project_id
 # }

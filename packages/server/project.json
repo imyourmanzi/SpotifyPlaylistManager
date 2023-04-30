@@ -32,7 +32,20 @@
       "executor": "nx:run-commands",
       "options": {
         "cwd": ".",
-        "command": "docker build . -t spotify-playlist-manager-server",
+        "commands": [
+          "docker build --platform=linux/amd64 . -t spm-server:latest",
+          "docker tag spm-server:latest us-central1-docker.pkg.dev/imyourmanzi-spotifyplaylistmgr/server-images/server:latest",
+          "docker tag spm-server:latest \"us-central1-docker.pkg.dev/imyourmanzi-spotifyplaylistmgr/server-images/server:$(date +'%Y%m%dT%H%M%S')\""
+        ],
+        "parallel": false,
+        "color": true
+      }
+    },
+    "build:docker:m1": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": ".",
+        "command": "docker build --platform=linux/arm64 . -t spm-server:latest-m1",
         "color": true
       }
     },
