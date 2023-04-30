@@ -8,6 +8,7 @@ export type EnvironmentConfig = {
   port: number;
 
   // only set in downstream configs
+  host?: string;
   production?: boolean;
   redirectURI?: string;
 };
