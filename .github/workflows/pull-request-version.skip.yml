@@ -1,0 +1,19 @@
+name: 'Check Version'
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - 'packages/**'
+      - 'package*.json'
+      - 'tsconfig.base.json'
+      - 'babel.config.json'
+      - 'nx.json'
+      - 'workspace.json'
+
+jobs:
+  check:
+    name: Check
+    steps:
+      - run: 'echo "No version bump required"'
