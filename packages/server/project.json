@@ -34,8 +34,7 @@
         "cwd": ".",
         "commands": [
           "docker build --platform=linux/amd64 . -t spm-server:latest",
-          "docker tag spm-server:latest us-central1-docker.pkg.dev/imyourmanzi-spotifyplaylistmgr/server-images/server:latest",
-          "docker tag spm-server:latest \"us-central1-docker.pkg.dev/imyourmanzi-spotifyplaylistmgr/server-images/server:$(date +'%Y%m%dT%H%M%S')\""
+          "docker tag spm-server:latest \"spm-server:$(date +'%Y%m%dT%H%M%S')\""
         ],
         "parallel": false,
         "color": true
@@ -45,7 +44,11 @@
       "executor": "nx:run-commands",
       "options": {
         "cwd": ".",
-        "command": "docker build --platform=linux/arm64 . -t spm-server:latest-m1",
+        "commands": [
+          "docker build --platform=linux/arm64 . -t spm-server:latest-m1",
+          "docker tag spm-server:latest-m1 \"spm-server:$(date +'%Y%m%dT%H%M%S')-m1\""
+        ],
+        "parallel": false,
         "color": true
       }
     },
