@@ -5,9 +5,7 @@ resource "google_cloud_run_v2_service" "main" {
   location = var.region
 
   template {
-    annotations = {
-      "run.googleapis.com/client-name" = "terraform"
-    }
+    service_account = google_service_account.server_run.email
 
     containers {
       image = "us-central1-docker.pkg.dev/imyourmanzi-spotifyplaylistmgr/server-images/server:latest"
@@ -54,27 +52,21 @@ resource "google_cloud_run_v2_service" "main" {
   }
 }
 
-resource "google_cloud_run_v2_service_iam_member" "server_deploy" {
-  project  = google_cloud_run_v2_service.main.project
-  location = google_cloud_run_v2_service.main.location
-  name     = google_cloud_run_v2_service.main.name
-
-  role   = "roles/run.developer"
-  member = "serviceAccount:${google_service_account.server_deploy.email}"
-}
-
-
-data "google_iam_policy" "public_access" {
+data "google_iam_policy" "server_access" {
   binding {
     role    = "roles/run.invoker"
     members = ["allUsers"]
   }
+
+  binding {
+    role    = "roles/run.developer"
+    members = ["serviceAccount:${google_service_account.server_deploy.email}"]
+  }
 }
 
-resource "google_cloud_run_v2_service_iam_policy" "public_access" {
+resource "google_cloud_run_v2_service_iam_policy" "server_access" {
   location = google_cloud_run_v2_service.main.location
-  project  = google_cloud_run_v2_service.main.project
   name     = google_cloud_run_v2_service.main.name
 
-  policy_data = data.google_iam_policy.public_access.policy_data
+  policy_data = data.google_iam_policy.server_access.policy_data
 }

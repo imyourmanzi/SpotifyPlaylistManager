@@ -7,12 +7,12 @@ on:
     branches:
       - main
     paths-ignore:
-      - '.github/'
+      - '.github/**'
       - '!.github/workflows/main-2-deploy-application.yml'
-      - '.vscode/'
-      - 'docs/'
-      - 'infrastructure/'
-      - 'tools/'
+      - '.vscode/**'
+      - 'docs/**'
+      - 'infrastructure/**'
+      - 'tools/**'
       - '.editorconfig'
       - '.eslintrc.json'
       - '.prettierignore'
@@ -48,6 +48,7 @@ jobs:
     environment: production
     concurrency: 'production:server'
     steps:
+      - uses: actions/checkout@v3
       - id: gcp_auth
         uses: google-github-actions/auth@v1
         with:
@@ -57,7 +58,6 @@ jobs:
         with:
           project_id: imyourmanzi-spotifyplaylistmgr
           # install_components: core,gcloud # see https://cloud.google.com/sdk/docs/components
-      - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 18

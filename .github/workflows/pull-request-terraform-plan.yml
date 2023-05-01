@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'infrastructure/'
+      - 'infrastructure/**'
       - '.github/workflows/pull-request-terraform-plan.yml'
 
 jobs:
