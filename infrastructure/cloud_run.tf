@@ -26,7 +26,7 @@ resource "google_cloud_run_v2_service" "main" {
         period_seconds        = 30
         failure_threshold     = 3
         http_get {
-          path = "/healthcheck"
+          path = "/api/healthcheck"
         }
       }
 
