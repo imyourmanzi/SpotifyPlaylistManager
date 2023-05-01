@@ -7,12 +7,12 @@ on:
     branches:
       - main
     paths-ignore:
-      - '.github/'
+      - '.github/**'
       - '!.github/workflows/main-2-deploy-application.yml'
-      - '.vscode/'
-      - 'docs/'
-      - 'infrastructure/'
-      - 'tools/'
+      - '.vscode/**'
+      - 'docs/**'
+      - 'infrastructure/**'
+      - 'tools/**'
       - '.editorconfig'
       - '.eslintrc.json'
       - '.prettierignore'
