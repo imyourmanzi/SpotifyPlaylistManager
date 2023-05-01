@@ -6,11 +6,11 @@ FROM node:18-bullseye as build
 WORKDIR /usr/src/build_app
 
 # install dependencies
-COPY --chown=node:node package*.json /usr/src/build_app
+COPY --chown=node:node package*.json /usr/src/build_app/
 RUN npm ci
 
 # build/compile the whole application
-COPY --chown=node:node . /usr/src/build_app
+COPY --chown=node:node . /usr/src/build_app/
 RUN npx nx run server:build:production
 
 # prune node_modules

@@ -58,14 +58,7 @@ jobs:
         with:
           project_id: imyourmanzi-spotifyplaylistmgr
           # install_components: core,gcloud # see https://cloud.google.com/sdk/docs/components
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'npm'
-      - id: package
-        run: echo "contents=$(cat package.json)" >> "$GITHUB_OUTPUTS"
-      - run: npx -y 'nx@{{ fromJSON(steps.package.outputs.contents)['devDependencies']['@nrwl/cli'] }}' build:docker server
-      - run: docker tag docker tag spm-server:latest us-central1-docker.pkg.dev/imyourmanzi-spotifyplaylistmgr/server-images/server:latest
+      - run: docker build --platform=linux/amd64 . -t us-central1-docker.pkg.dev/imyourmanzi-spotifyplaylistmgr/server-images/server:latest
       - run: echo '${{ steps.gcp_auth.outputs.access_token }}' | docker login -u oauth2accesstoken --password-stdin https://us-central1-docker.pkg.dev
       - run: docker push us-central1-docker.pkg.dev/imyourmanzi-spotifyplaylistmgr/server-images/server:latest
       - run: gcloud run deploy server --image us-central1-docker.pkg.dev/imyourmanzi-spotifyplaylistmgr/server-images/server:latest --revision-suffix "$(date +'%Y%m%d-%H%M%S')" --region us-central1
