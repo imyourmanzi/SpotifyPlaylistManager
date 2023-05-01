@@ -1,4 +1,4 @@
-name: 'Check Version'
+name: npm Package
 
 on:
   pull_request:
@@ -13,8 +13,6 @@ on:
       - 'workspace.json'
 
 jobs:
-  npm:
-    name: 'npm Package'
-    runs-on: ubuntu-latest
-    steps:
-      - run: 'echo "No version bump required"'
+  version:
+    name: Check Version
+    uses: imyourmanzi/GitHubWorkflows/.github/workflows/npm-check-version.skip.yml@main

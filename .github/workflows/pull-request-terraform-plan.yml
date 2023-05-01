@@ -1,4 +1,4 @@
-name: Terraform PR
+name: Terraform Plan
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   infrastructure:
-    name: Plan Infrastructure
+    name: Infrastructure
     runs-on: ubuntu-latest
     defaults:
       run:

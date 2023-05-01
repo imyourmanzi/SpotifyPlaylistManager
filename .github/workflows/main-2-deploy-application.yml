@@ -1,4 +1,4 @@
-name: Deploy Application
+name: Production Deploy
 
 concurrency: production
 
@@ -33,7 +33,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'npm'
+          cache: npm
       - run: npm ci
       - run: npx nx build ui
       - uses: FirebaseExtended/action-hosting-deploy@v0
