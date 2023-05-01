@@ -8,6 +8,7 @@ on:
       - main
     paths:
       - 'infrastructure/'
+      - '.github/workflows/main-1-deploy-infrastructure.yml'
       - '.firebaserc'
       - 'firebase.json'
 
@@ -27,4 +28,5 @@ jobs:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
           terraform_version: 1.4
           terraform_wrapper: false
-      - run: 'terraform apply -auto-approve'
+      - run: terraform init
+      - run: terraform apply -auto-approve
