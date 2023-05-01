@@ -14,5 +14,4 @@ on:
 
 jobs:
   check:
-    name: Check
     uses: imyourmanzi/GitHubWorkflows/.github/workflows/check-version-npm.yml@main
