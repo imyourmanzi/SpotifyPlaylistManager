@@ -40,3 +40,19 @@ resource "google_service_account" "server_run" {
   display_name = "server Service Account"
   description  = "Service account that identifies the Cloud Run \"server\" service"
 }
+
+data "google_iam_policy" "server_run_access" {
+  binding {
+    role = "roles/run.serviceAgent"
+
+    members = [
+      "serviceAccount:${google_service_account.server_deploy.email}",
+    ]
+  }
+}
+
+resource "google_service_account_iam_policy" "server_run_access" {
+  service_account_id = google_service_account.server_run.name
+
+  policy_data = data.google_iam_policy.server_run_access.policy_data
+}
