@@ -8,6 +8,7 @@ on:
       - main
     paths:
       - 'infrastructure/'
+      - '.github/workflows/main-1-deploy-infrastructure.yml'
       - '.firebaserc'
       - 'firebase.json'
 

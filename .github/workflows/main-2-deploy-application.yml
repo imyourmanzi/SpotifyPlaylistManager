@@ -8,11 +8,10 @@ on:
       - main
     paths-ignore:
       - '.github/'
-      - '!.github/workflows/application-deploy.yml'
+      - '!.github/workflows/main-2-deploy-application.yml'
       - '.vscode/'
       - 'docs/'
       - 'infrastructure/'
-      - 'kubernetes/'
       - 'tools/'
       - '.editorconfig'
       - '.eslintrc.json'
