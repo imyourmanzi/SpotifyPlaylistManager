@@ -10,5 +10,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: docker build --platform=linux/amd64 . -t spm-server:latest
-      - run: docker tag docker tag spm-server:latest us-central1-docker.pkg.dev/imyourmanzi-spotifyplaylistmgr/server-images/server:latest
+      - run: docker build --platform=linux/amd64 . -t us-central1-docker.pkg.dev/imyourmanzi-spotifyplaylistmgr/server-images/server:latest
