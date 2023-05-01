@@ -30,7 +30,9 @@ export const SpotifyLoginCallbackHandler = () => {
         setRefreshToken(refresh_token);
       },
     );
-  }, [location.search, setAccessToken, setRefreshToken]);
+    // we only want to run the effect if the search locations string changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
 
   useEffect(() => {
     if (!accessToken || !refreshToken) {
