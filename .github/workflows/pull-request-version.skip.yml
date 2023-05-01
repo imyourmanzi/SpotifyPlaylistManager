@@ -13,8 +13,8 @@ on:
       - 'workspace.json'
 
 jobs:
-  check:
-    name: Check
+  npm:
+    name: 'npm Package'
     runs-on: ubuntu-latest
     steps:
       - run: 'echo "No version bump required"'
