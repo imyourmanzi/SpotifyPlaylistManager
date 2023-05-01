@@ -1,0 +1,6 @@
+*
+!/packages/
+!/nx.json
+!/package*.json
+!/tsconfig.base.json
+!/workspace.json

@@ -23,30 +23,36 @@ export const server = fastify({
 server.addSchema(HeadersContentTypeJson);
 server.addSchema(HeadersContentTypeForm);
 
-// add basic health check endpoint
-server.get('/healthcheck', (_, reply) => reply.status(200).send());
-
-// set up API
-server.register(
-  async (apiInstance) => {
-    // add auth routes which have no dependencies
-    await apiInstance.register(authRoutes);
-
-    // API plugins
-    await apiInstance.register(cookie);
-    await apiInstance.register(spotifyWebApiClient);
-    await apiInstance.register(spotifyAuthUser);
-
-    // API routes
-    await apiInstance.register(playlistsRoutes);
-    await apiInstance.register(importRoutes);
-  },
-  { prefix: '/api' },
-);
-
+// set up default error handler
 server.setErrorHandler((error, request, reply) => {
   request.log.error(error, 'Error hanlding request', { user: request.user });
   return reply
     .status(500)
     .send({ errorType: 'unknown', reason: 'An error occurred on our end!' });
 });
+
+// set up API
+server.register(
+  async (apiInstance) => {
+    // add basic health check endpoint
+    apiInstance.get('/healthcheck', { logLevel: 'error' }, (_, reply) =>
+      reply.status(200).send({ healthy: true }),
+    );
+
+    // add auth routes which have no dependencies
+    await apiInstance.register(authRoutes);
+
+    // portion of server that is for authenticated requests
+    await apiInstance.register(async (authenticatedInstance) => {
+      // plugins
+      await authenticatedInstance.register(cookie);
+      await authenticatedInstance.register(spotifyWebApiClient);
+      await authenticatedInstance.register(spotifyAuthUser);
+
+      // routes
+      await authenticatedInstance.register(playlistsRoutes);
+      await authenticatedInstance.register(importRoutes);
+    });
+  },
+  { prefix: '/api' },
+);
