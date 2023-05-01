@@ -1,4 +1,4 @@
-name: Deploy Infrastructure
+name: Production
 
 concurrency: production
 
@@ -14,7 +14,7 @@ on:
 
 jobs:
   infrastructure:
-    name: GCP Infrastructure via Terraform
+    name: Deploy Infrastructure
     runs-on: ubuntu-latest
     environment: production
     defaults:

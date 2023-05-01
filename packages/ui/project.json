@@ -58,7 +58,8 @@
         },
         "production": {
           "buildTarget": "ui:build:production",
-          "hmr": false
+          "hmr": false,
+          "liveReload": false
         }
       }
     },

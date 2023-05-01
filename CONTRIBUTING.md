@@ -6,6 +6,7 @@ Start the application like this.
 
 ```sh
 SPOTIFY_SECRET="<SECRET>" npx nx run-many --target=serve --projects=server,ui
+# add --configuration=production onto the end to use production build settings
 ```
 
 Run this to check if the server is running.
