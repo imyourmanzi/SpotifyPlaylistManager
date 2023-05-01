@@ -13,6 +13,5 @@ on:
       - 'workspace.json'
 
 jobs:
-  version:
-    name: Check Version
+  use:
     uses: imyourmanzi/GitHubWorkflows/.github/workflows/npm-check-version.yml@main

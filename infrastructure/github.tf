@@ -8,12 +8,11 @@ resource "github_branch_protection" "main" {
 
   required_status_checks {
     strict   = true
-    contexts = []
+    contexts = ["Affected/Build", "Affected/Test"]
   }
 
   required_pull_request_reviews {
     dismiss_stale_reviews           = true
-    restrict_dismissals             = true
     required_approving_review_count = 1
   }
 }
