@@ -13,6 +13,6 @@ on:
       - 'workspace.json'
 
 jobs:
-  check:
-    name: Check
+  npm:
+    name: 'npm Package'
     uses: imyourmanzi/GitHubWorkflows/.github/workflows/check-version-npm.yml@main

@@ -1,9 +1,16 @@
 import { environmentBase, EnvironmentConfig } from './environment.base';
 
+const { SPOTIFY_REDIRECT_URI: redirectURI } = process.env;
+
+if (!redirectURI) {
+  console.error('Missing redirect URI! Exiting...');
+  process.exit(1);
+}
+
 export const environment: EnvironmentConfig = {
   ...environmentBase,
   production: true,
-  redirectURI: 'TODO: set the prod redirect URI',
+  redirectURI,
   logConfig: true,
   host: '0.0.0.0',
 };

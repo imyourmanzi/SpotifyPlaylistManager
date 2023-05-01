@@ -26,7 +26,7 @@ resource "google_cloud_run_v2_service" "main" {
         period_seconds        = 30
         failure_threshold     = 3
         http_get {
-          path = "/healthcheck"
+          path = "/api/healthcheck"
         }
       }
 
@@ -43,6 +43,11 @@ resource "google_cloud_run_v2_service" "main" {
       env {
         name  = "SPOTIFY_CLIENT_ID"
         value = "b80440eadf0a4f989bba93e5b4ff2fc5"
+      }
+
+      env {
+        name  = "SPOTIFY_REDIRECT_URI"
+        value = "https://playlists.mattmanzi.com/callback"
       }
 
       ports {
