@@ -3,7 +3,7 @@ import { environmentBase, EnvironmentConfig } from './environment.base';
 const { SPOTIFY_REDIRECT_URI: redirectURI } = process.env;
 
 if (!redirectURI) {
-  console.error('Missing redirect URI! Exiting...');
+  console.error({ msg: 'Missing redirect URI! Exiting...' });
   process.exit(1);
 }
 

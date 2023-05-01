@@ -16,7 +16,7 @@ export type EnvironmentConfig = {
 const { SPOTIFY_SECRET, SPOTIFY_CLIENT_ID } = process.env;
 
 if (!SPOTIFY_SECRET) {
-  console.error('Missing Spotify client secret! Exiting...');
+  console.error({ msg: 'Missing Spotify client secret! Exiting...' });
   process.exit(1);
 }
 
