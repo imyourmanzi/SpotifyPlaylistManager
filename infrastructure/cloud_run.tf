@@ -5,10 +5,6 @@ resource "google_cloud_run_v2_service" "main" {
   location = var.region
 
   template {
-    annotations = {
-      "run.googleapis.com/client-name" = "terraform"
-    }
-
     service_account = google_service_account.server_run.email
 
     containers {
