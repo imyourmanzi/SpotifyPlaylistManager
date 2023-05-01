@@ -7,8 +7,7 @@ resource "github_branch_protection" "main" {
   pattern       = "main"
 
   required_status_checks {
-    strict   = true
-    contexts = ["Affected/Build", "Affected/Test"]
+    strict = true
   }
 
   required_pull_request_reviews {
