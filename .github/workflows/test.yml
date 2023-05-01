@@ -16,5 +16,5 @@ jobs:
           cache: 'npm'
       - id: package
         run: echo "contents=$(cat package.json | tr -d '\n')" >> "$GITHUB_OUTPUT"
-      - run: npx -y 'nx@{{ fromJSON(steps.package.outputs.contents)['devDependencies']['@nrwl/cli'] }}' build:docker server
+      - run: npx -y nx@{{ fromJSON(steps.package.outputs.contents)['devDependencies']['@nrwl/cli'] }} build:docker server
       - run: docker tag docker tag spm-server:latest us-central1-docker.pkg.dev/imyourmanzi-spotifyplaylistmgr/server-images/server:latest
