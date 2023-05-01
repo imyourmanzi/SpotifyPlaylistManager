@@ -85,3 +85,4 @@ _\*Note: `<owner>` is currently `imyourmanzi`_
       ```sh
       terraform apply
       ```
+1. Add the value for `SPOTIFY_REDIRECT_URI` from [**infrastructure/cloud_run.tf**](infrastructure/cloud_run.tf) to the Spotify Developer app information UI
