@@ -48,7 +48,8 @@ _\*Note: `<owner>` is currently `imyourmanzi`_
          - Artifact Registry Administrator
          - Cloud Run Admin
          - Editor
-         - Secret Manager Secret Accessor
+         - Secret Manager Admin
+         - Service Account Admin
       1. Create JSON key for account and download
       1. Copy key contents: `cat <key_file>.json | tr -d '\n' | pbcopy`
       1. Set the **sensitive** `GOOGLE_CREDENTIALS` environment variable in Terraform Cloud `infrastructure` workspace, description: "<owner>-spotifyplaylistmgr project Terraform service account key ID: <key_ID>"
@@ -65,7 +66,6 @@ _\*Note: `<owner>` is currently `imyourmanzi`_
       1. Set the **sensitive** `GITHUB_TOKEN` environment variable in Terraform Cloud `infrastructure` workspace, description: "GitHub token: [SPM] Terraform Cloud Token"
 1. Create a service account for Firebase hosting deployments and add it to GitHub with: `npx firebase init hosting:github`
    1. The **firebase-hosting-merge.yml** can be deleted (that's handled by [**application-deploy.yml**](.github/workflows/application-deploy.yml))
-1. Grant "Compute Engine default service account" the "Secret Manager Accessor Role"
 1. An initial deployment must be run from `main`, since future deploys rely on the server container image and GitHub "production" environment that will be created in this initial deploy:
    1. Create initial infrastructure—this will fail to create the service but it will create the Artifact Registry repository which is what we need first (and yes there's a better way to do this that involves Terraform workspaces but we're not there yet)
       ```
