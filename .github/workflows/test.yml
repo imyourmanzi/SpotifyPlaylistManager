@@ -9,6 +9,11 @@ jobs:
     name: UI
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
       - id: package
         run: echo "contents=$(cat package.json)" >> "$GITHUB_OUTPUT"
       - run: npx -y 'nx@{{ fromJSON(steps.package.outputs.contents)['devDependencies']['@nrwl/cli'] }}' build:docker server
