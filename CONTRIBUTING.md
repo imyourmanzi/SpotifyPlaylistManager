@@ -66,3 +66,4 @@ _\*Note: `<owner>` is currently `imyourmanzi`_
 1. Create a service account for Firebase hosting deployments and add it to GitHub with: `npx firebase init hosting:github`
    1. The **firebase-hosting-merge.yml** can be deleted (that's handled by [**application-deploy.yml**](.github/workflows/application-deploy.yml))
 1. Grant "Compute Engine default service account" the "Secret Manager Accessor Role"
+1. An initial `terraform apply` must be run from `main`, since future deploys rely on the GitHub "production" environment that will be created in this initial deploy.
