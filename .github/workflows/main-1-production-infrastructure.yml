@@ -1,4 +1,4 @@
-name: Production Deploy
+name: Production
 
 concurrency: production
 
@@ -14,7 +14,7 @@ on:
 
 jobs:
   infrastructure:
-    name: Infrastructure
+    name: Deploy Infrastructure
     runs-on: ubuntu-latest
     environment: production
     defaults:

@@ -1,4 +1,4 @@
-name: Terraform Plan
+name: Infrastructure
 
 on:
   pull_request:
@@ -9,8 +9,8 @@ on:
       - '.github/workflows/pull-request-terraform-plan.yml'
 
 jobs:
-  infrastructure:
-    name: Infrastructure
+  plan:
+    name: Plan
     runs-on: ubuntu-latest
     defaults:
       run:
