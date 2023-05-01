@@ -8,35 +8,17 @@ on:
       - main
     paths:
       - 'infrastructure/'
-      - 'kubernetes/'
       - '.firebaserc'
       - 'firebase.json'
 
 jobs:
   infrastructure:
-    name: GCP Infrastructure
+    name: GCP Infrastructure via Terraform
     runs-on: ubuntu-latest
     environment: production
     defaults:
       run:
         working-directory: infrastructure
-    steps:
-      - uses: actions/checkout@v3
-      - uses: hashicorp/setup-terraform@v2
-        with:
-          cli_config_credentials_hostname: 'app.terraform.io'
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-          terraform_version: 1.4
-          terraform_wrapper: false
-      - run: 'terraform apply -auto-approve'
-  kubernetes:
-    needs: infrastructure
-    name: Kubernetes Configuration
-    runs-on: ubuntu-latest
-    environment: production
-    defaults:
-      run:
-        working-directory: kubernetes
     steps:
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
