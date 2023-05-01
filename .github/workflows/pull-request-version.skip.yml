@@ -15,5 +15,6 @@ on:
 jobs:
   check:
     name: Check
+    runs-on: ubuntu-latest
     steps:
       - run: 'echo "No version bump required"'
