@@ -16,6 +16,12 @@ resource "github_branch_protection" "main" {
   }
 }
 
+resource "github_actions_secret" "server_deploy_key" {
+  repository      = data.github_repository.main.name
+  secret_name     = "server_deploy_key"
+  plaintext_value = google_service_account_key.server_deploy_key.private_key
+}
+
 resource "github_repository_environment" "production" {
   repository  = data.github_repository.main.name
   environment = "production"
@@ -31,11 +37,4 @@ resource "github_repository_environment" "production" {
 resource "github_repository_environment" "staging" {
   repository  = data.github_repository.main.name
   environment = "staging"
-}
-
-resource "github_actions_environment_secret" "production_server_deploy_key" {
-  repository      = data.github_repository.main.name
-  environment     = github_repository_environment.production.environment
-  secret_name     = "server_deploy_key"
-  plaintext_value = google_service_account_key.server_deploy_key.private_key
 }

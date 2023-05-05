@@ -47,7 +47,7 @@ resource "google_cloud_run_v2_service" "main" {
 
       env {
         name  = "SPOTIFY_REDIRECT_URI"
-        value = "https://playlists.mattmanzi.com/callback"
+        value = "https://playlists.mattmanzi.com/callback/"
       }
 
       ports {
