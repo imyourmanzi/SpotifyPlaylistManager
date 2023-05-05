@@ -1,0 +1,25 @@
+name: Staging Cleanup
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  server:
+    name: 'Teardown PR #${{ github.event.pull_request.number }} Staging Server'
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    environment: staging
+    concurrency: 'staging:server'
+    steps:
+      - uses: actions/checkout@v3
+      - id: gcp_auth
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: '${{ secrets.SERVER_DEPLOY_KEY }}'
+          token_format: access_token
+      - uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: imyourmanzi-spotifyplaylistmgr
+      - run: gcloud artifacts docker images delete us-central1-docker.pkg.dev/imyourmanzi-spotifyplaylistmgr/server-images/server:pr-${{ github.event.pull_request.number }}-latest
+      - run: gcloud run services delete staging-server-pr-${{ github.event.pull_request.number }}-latest --region us-central1
