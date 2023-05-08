@@ -18,16 +18,16 @@ jobs:
           node-version: 18
           cache: npm
       - run: npm ci
-      - run: cp firebase.json tmp.json && jq '(.hosting.rewrites[] | select(.source == "/api/**").run.serviceId) = $serviceId' tmp.json --arg serviceId 'staging-server-pr-${{ github.event.pull_request.number }}' > firebase.json
+      - run: cp firebase.json tmp.json && jq '(.hosting.rewrites[] | select(.source == "/api/**").run.serviceId) = $serviceId' tmp.json --arg serviceId 'staging-server' > firebase.json
       - run: npx nx build ui
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_IMYOURMANZI_SPOTIFYPLAYLISTMGR }}
           projectId: imyourmanzi-spotifyplaylistmgr
-          channelId: staging-pr-${{ github.event.pull_request.number }}
+          channelId: staging
   server:
-    name: 'Deploy PR #${{ github.event.pull_request.number }} Staging Server'
+    name: 'Deploy PR #${{ github.event.pull_request.number }} to Staging Server'
     if: github.event.pull_request.head.repo.full_name == github.repository && github.event.action != 'closed'
     runs-on: ubuntu-latest
     environment: staging
@@ -47,11 +47,11 @@ jobs:
       - run: docker push us-central1-docker.pkg.dev/imyourmanzi-spotifyplaylistmgr/server-images/server:pr-${{ github.event.pull_request.number }}-latest
       - run: |
           gcloud run deploy \
-            staging-server-pr-${{ github.event.pull_request.number }} \
+            staging-server \
             --region us-central1 \
             --image us-central1-docker.pkg.dev/imyourmanzi-spotifyplaylistmgr/server-images/server:pr-${{ github.event.pull_request.number }}-latest \
             --revision-suffix "$(date +'%Y%m%d-%H%M%S')" \
-            --set-env-vars SPOTIFY_CLIENT_ID=b80440eadf0a4f989bba93e5b4ff2fc5,SPOTIFY_REDIRECT_URI=https://imyourmanzi-spotifyplaylistmgr--staging-pr-${{ github.event.pull_request.number }}.web.app/callback/ \
-            --set-secrets SPOTIFY_SECRET=spotify-client-secret \
+            --set-env-vars SPOTIFY_CLIENT_ID=b80440eadf0a4f989bba93e5b4ff2fc5,SPOTIFY_REDIRECT_URI=https://imyourmanzi-spotifyplaylistmgr--staging.web.app/callback/ \
+            --set-secrets SPOTIFY_SECRET=spotify-client-secret:latest \
             --port 8080 \
             --service-account server-run@imyourmanzi-spotifyplaylistmgr.iam.gserviceaccount.com
