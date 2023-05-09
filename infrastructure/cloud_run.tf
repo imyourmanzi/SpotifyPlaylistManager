@@ -104,11 +104,6 @@ resource "google_cloud_run_v2_service" "staging_server" {
         value = "b80440eadf0a4f989bba93e5b4ff2fc5"
       }
 
-      env {
-        name  = "SPOTIFY_REDIRECT_URI"
-        value = "https://imyourmanzi-spotifyplaylistmgr--staging.web.app/callback/"
-      }
-
       ports {
         container_port = 8080
       }
