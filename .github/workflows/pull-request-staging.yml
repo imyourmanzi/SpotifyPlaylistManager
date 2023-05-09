@@ -45,13 +45,4 @@ jobs:
       - run: docker build --platform=linux/amd64 . -t us-central1-docker.pkg.dev/imyourmanzi-spotifyplaylistmgr/server-images/server:pr-${{ github.event.pull_request.number }}-latest
       - run: echo '${{ steps.gcp_auth.outputs.access_token }}' | docker login -u oauth2accesstoken --password-stdin https://us-central1-docker.pkg.dev
       - run: docker push us-central1-docker.pkg.dev/imyourmanzi-spotifyplaylistmgr/server-images/server:pr-${{ github.event.pull_request.number }}-latest
-      - run: |
-          gcloud run deploy \
-            staging-server \
-            --region us-central1 \
-            --image us-central1-docker.pkg.dev/imyourmanzi-spotifyplaylistmgr/server-images/server:pr-${{ github.event.pull_request.number }}-latest \
-            --revision-suffix "$(date +'%Y%m%d-%H%M%S')" \
-            --set-env-vars SPOTIFY_CLIENT_ID=b80440eadf0a4f989bba93e5b4ff2fc5,SPOTIFY_REDIRECT_URI=https://imyourmanzi-spotifyplaylistmgr--staging.web.app/callback/ \
-            --set-secrets SPOTIFY_SECRET=spotify-client-secret:latest \
-            --port 8080 \
-            --service-account server-run@imyourmanzi-spotifyplaylistmgr.iam.gserviceaccount.com
+      - run: gcloud run deploy staging-server --region us-central1 --image us-central1-docker.pkg.dev/imyourmanzi-spotifyplaylistmgr/server-images/server:pr-${{ github.event.pull_request.number }}-latest
