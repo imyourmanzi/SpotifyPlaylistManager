@@ -27,11 +27,8 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_IMYOURMANZI_SPOTIFYPLAYLISTMGR }}
           projectId: imyourmanzi-spotifyplaylistmgr
           channelId: staging
-      - run: echo '${{ steps.deploy.outputs.details_url }}'
-      - run: echo '${{ steps.deploy.outputs.expire_time }}'
-      - run: echo '${{ steps.deploy.outputs.urls }}'
     outputs:
-      url: ${{ steps.deploy.outputs.urls[0] }}
+      url: ${{ steps.deploy.outputs.details_url }}
   server:
     name: 'Deploy PR #${{ github.event.pull_request.number }} to Staging Server'
     if: github.event.pull_request.head.repo.full_name == github.repository && github.event.action != 'closed'
