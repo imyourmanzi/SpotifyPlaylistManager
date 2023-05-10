@@ -8,7 +8,7 @@ resource "google_artifact_registry_repository" "server_images" {
 data "google_iam_policy" "server_images_access" {
   binding {
     members = ["serviceAccount:${google_service_account.server_deploy.email}"]
-    role    = "roles/artifactregistry.writer"
+    role    = "roles/artifactregistry.repoAdmin"
   }
 }
 

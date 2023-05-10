@@ -9,12 +9,9 @@ WORKDIR /usr/src/build_app
 COPY --chown=node:node package*.json /usr/src/build_app/
 RUN npm ci
 
-# build/compile the whole application
+# build/compile the whole application & then prune node_modules
 COPY --chown=node:node . /usr/src/build_app/
-RUN npx nx run server:build:production
-
-# prune node_modules
-RUN npm prune --omit=dev
+RUN npx nx run server:build:production && npm prune --omit=dev
 
 # ====== run stage ======
 FROM node:18-bullseye-slim
