@@ -2,6 +2,13 @@
 
 A TypeScript Node project to enable exporting and importing Spotify playlists in various formats.
 
+---
+
+👋 **Archival Note**  
+Key takeaways from this project are: there are some really wild authentication methods out there, Terraform is great but infrastructure is still software development (a PITA sometimes), and Nx (and other monorepo solutions) still have not won me over and I'm convinced they never will.
+
+---
+
 ## Features
 
 ### Non-Public Requests
